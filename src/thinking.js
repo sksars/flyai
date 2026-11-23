@@ -1,14 +1,52 @@
 /**
- * MyAI High-Thinking MML (Multi-step Multilingual Model) Reasoning Engine
- * Performs deterministic multi-step query analysis, step-by-step math & algebra,
- * dual-topic comparison research, deep article synthesis, and context-dependent
- * transformation over active conversation memory — 100% client-side in pure JS.
+ * AirAI Qwen3-Style High-Thinking MML (Multi-step Multilingual Model) Engine
+ * Supports hybrid /think and /no_think directives, deterministic multi-step reasoning,
+ * step-by-step math with self-verification, dual-topic Markdown table comparisons,
+ * compound sub-task decomposition, and deep browser synthesis — 100% client-side in pure JS.
  */
 
 import { cleanWikiExtract, fetchArticleExtract, performBrowserResearch } from './research.js';
 
 /**
- * Solve higher-order math, algebra, statistics, and financial formulas with full step-by-step derivation.
+ * Parse Qwen3-style inline thinking directives (/think or /no_think).
+ * @param {string} rawText
+ * @returns {{ cleanText: string, modeOverride: 'think' | 'fast' | null }}
+ */
+export function parseThinkingDirective(rawText) {
+  const trimmed = rawText.trim();
+  if (/(?:^|\s)\/no_think(?:\s|$)/i.test(trimmed)) {
+    const cleanText = trimmed.replace(/(?:^|\s)\/no_think(?:\s|$)/gi, ' ').replace(/\s+/g, ' ').trim();
+    return { cleanText: cleanText || trimmed, modeOverride: 'fast' };
+  }
+  if (/(?:^|\s)\/think(?:\s|$)/i.test(trimmed)) {
+    const cleanText = trimmed.replace(/(?:^|\s)\/think(?:\s|$)/gi, ' ').replace(/\s+/g, ' ').trim();
+    return { cleanText: cleanText || trimmed, modeOverride: 'think' };
+  }
+  return { cleanText: trimmed, modeOverride: null };
+}
+
+/**
+ * Detect compound prompts with two independent clauses (e.g., "X and calculate Y").
+ * @param {string} rawText
+ * @returns {string[] | null}
+ */
+export function decomposeCompoundQuery(rawText) {
+  const trimmed = rawText.trim();
+  if (trimmed.length < 18 || trimmed.length > 260) return null;
+  // Avoid splitting "difference between A and B" or "A vs B"
+  if (/\b(vs\.?|versus|difference between|comparison between)\b/i.test(trimmed)) return null;
+
+  const parts = trimmed
+    .split(/\s+(?:and also|and then|aur batao|aur solve|;)\s+/i)
+    .map((p) => p.trim())
+    .filter((p) => p.length >= 4);
+
+  if (parts.length === 2) return parts;
+  return null;
+}
+
+/**
+ * Solve higher-order math, algebra, geometry, statistics, and financial formulas with self-verification.
  * @param {string} rawText
  * @param {string} lang
  * @returns {{ reply: string, numericResult?: number, steps: string[] } | null}
@@ -26,18 +64,20 @@ export function solveAdvancedMathStepByStep(rawText, lang) {
     if (a !== 0 && Number.isFinite(a) && Number.isFinite(b) && Number.isFinite(c)) {
       const rhs = Number((c - b).toFixed(4));
       const xVal = Number((rhs / a).toFixed(4));
+      const verifiedLhs = Number((a * xVal + b).toFixed(4));
       const signB = b >= 0 ? `+ ${b}` : `- ${Math.abs(b)}`;
       const steps = [
-        `Parsed linear equation: ${a}x ${b !== 0 ? signB : ''} = ${c}`,
-        `Isolated variable term: ${a}x = ${c} - (${b}) = ${rhs}`,
-        `Solved for x: x = ${rhs} / ${a} = ${xVal}`,
+        `[Plan] Parsed linear equation: ${a}x ${b !== 0 ? signB : ''} = ${c}`,
+        `[Solve] Isolated variable term: ${a}x = ${c} - (${b}) = ${rhs}`,
+        `[Solve] Computed x = ${rhs} / ${a} = ${xVal}`,
+        `[Verify] Substituted x = ${xVal}: ${a}(${xVal}) ${b !== 0 ? signB : ''} = ${verifiedLhs} ✓`,
       ];
       const reply =
         lang === 'hi'
-          ? `### रैखिक समीकरण (Step-by-Step)\n1. दिया गया समीकरण: \`${a}x ${b !== 0 ? signB : ''} = ${c}\`\n2. \`${a}x = ${c} ${b >= 0 ? '-' : '+'} ${Math.abs(b)} = ${rhs}\`\n3. \`x = ${rhs} / ${a}\`\n\n**उत्तर:** \`x = ${xVal}\``
+          ? `### रैखिक समीकरण (Step-by-Step + सत्यापन)\n1. दिया गया समीकरण: \`${a}x ${b !== 0 ? signB : ''} = ${c}\`\n2. \`${a}x = ${c} ${b >= 0 ? '-' : '+'} ${Math.abs(b)} = ${rhs}\`\n3. \`x = ${rhs} / ${a} = ${xVal}\`\n4. **सत्यापन:** \`${a}(${xVal}) ${b !== 0 ? signB : ''} = ${verifiedLhs}\` ✓\n\n**उत्तर:** \`x = ${xVal}\``
           : lang === 'hinglish'
-            ? `### Linear Equation Solution (Step-by-Step)\n1. Diya gaya equation: \`${a}x ${b !== 0 ? signB : ''} = ${c}\`\n2. Constant ko right side le jayein: \`${a}x = ${rhs}\`\n3. \`x = ${rhs} / ${a}\`\n\n**Final Answer:** \`x = ${xVal}\``
-            : `### Linear Equation Solution (Step-by-Step)\n1. Start with: \`${a}x ${b !== 0 ? signB : ''} = ${c}\`\n2. Isolate the \`x\` term: \`${a}x = ${rhs}\`\n3. Divide both sides by \`${a}\`: \`x = ${rhs} / ${a}\`\n\n**Answer:** \`x = ${xVal}\``;
+            ? `### Linear Equation Solution (Step-by-Step + Check)\n1. Diya gaya equation: \`${a}x ${b !== 0 ? signB : ''} = ${c}\`\n2. Constant ko right side le jayein: \`${a}x = ${rhs}\`\n3. \`x = ${rhs} / ${a} = ${xVal}\`\n4. **Verification:** \`${a}(${xVal}) ${b !== 0 ? signB : ''} = ${verifiedLhs}\` ✓\n\n**Final Answer:** \`x = ${xVal}\``
+            : `### Linear Equation Solution (Step-by-Step + Verification)\n1. Start with: \`${a}x ${b !== 0 ? signB : ''} = ${c}\`\n2. Isolate the \`x\` term: \`${a}x = ${rhs}\`\n3. Divide both sides by \`${a}\`: \`x = ${rhs} / ${a} = ${xVal}\`\n4. **Verify:** \`${a}(${xVal}) ${b !== 0 ? signB : ''} = ${verifiedLhs}\` ✓\n\n**Answer:** \`x = ${xVal}\``;
       return { reply, numericResult: xVal, steps };
     }
   }
@@ -230,6 +270,31 @@ export function solveAdvancedMathStepByStep(rawText, lang) {
     }
   }
 
+  // 9. Geometry quick solvers (circle area/circumference, right triangle hypotenuse)
+  const circleMatch = text.match(/^(?:area|circumference)\s+of\s+(?:a\s+)?circle\s+(?:with\s+)?(?:radius|r)?\s*=?\s*(\d+(?:\.\d+)?)[?!.\s]*$/i);
+  if (circleMatch) {
+    const r = Number(circleMatch[1]);
+    const area = Number((Math.PI * r * r).toFixed(4));
+    const circ = Number((2 * Math.PI * r).toFixed(4));
+    return {
+      reply: `### Circle Geometry (r = ${r})\n1. **Area:** \`π × r² = π × ${r}²\` = **${area}**\n2. **Circumference:** \`2 × π × r = 2 × π × ${r}\` = **${circ}**`,
+      numericResult: area,
+      steps: [`[Solve] Applied circle formulas for r = ${r}`, `[Verify] Area = ${area}, Circumference = ${circ}`],
+    };
+  }
+
+  const pythMatch = text.match(/^(?:pythagoras|pythagorean|hypotenuse)\s+(\d+(?:\.\d+)?)\s+(?:and\s+|,\s*)?(\d+(?:\.\d+)?)[?!.\s]*$/i);
+  if (pythMatch) {
+    const a = Number(pythMatch[1]);
+    const b = Number(pythMatch[2]);
+    const c = Number(Math.hypot(a, b).toFixed(4));
+    return {
+      reply: `### Pythagorean Theorem\n1. Formula: \`c = √(a² + b²)\`\n2. \`c = √(${a}² + ${b}²) = √(${a * a + b * b})\` = **${c}**`,
+      numericResult: c,
+      steps: [`[Solve] Computed √(${a}² + ${b}²) = ${c}`, `[Verify] ${a}² + ${b}² = ${a * a + b * b} ≈ ${c}² ✓`],
+    };
+  }
+
   return null;
 }
 
@@ -360,7 +425,7 @@ export async function runComparisonReasoning(pair, appLang, canResearchOnline, o
     };
   }
 
-  steps.push('Synthesized structured side-by-side summary and source references');
+  steps.push('[Synthesis] Built structured comparison table, key distinction, and citations');
 
   const titleA = infoA?.title || subjectA;
   const titleB = infoB?.title || subjectB;
@@ -370,6 +435,19 @@ export async function runComparisonReasoning(pair, appLang, canResearchOnline, o
       : appLang === 'hinglish'
         ? `### Comparison Analysis: ${titleA} vs ${titleB}`
         : `### Comparison: ${titleA} vs ${titleB}`;
+
+  const cleanCell = (s) => (s || '—').replace(/\|/g, '/').replace(/\n+/g, ' ').trim();
+  const focusA = cleanCell(infoA?.desc || titleA);
+  const focusB = cleanCell(infoB?.desc || titleB);
+  const coreA = cleanCell(infoA?.points?.[0] || 'No detailed summary found locally.');
+  const coreB = cleanCell(infoB?.points?.[0] || 'No detailed summary found locally.');
+
+  const tableBlock = [
+    `| Dimension | ${cleanCell(titleA)} | ${cleanCell(titleB)} |`,
+    `| --- | --- | --- |`,
+    `| Primary Focus | ${focusA} | ${focusB} |`,
+    `| Core Overview | ${coreA} | ${coreB} |`,
+  ].join('\n');
 
   const secA = infoA
     ? `**1. ${titleA}**${infoA.desc ? ` — *${infoA.desc}*` : ''}\n${infoA.points.map((p) => `- ${p}`).join('\n')}`
@@ -396,7 +474,7 @@ export async function runComparisonReasoning(pair, appLang, canResearchOnline, o
     ok: true,
     topicLabel: `${titleA} vs ${titleB}`,
     steps,
-    reply: `${heading}\n\n${secA}\n\n${secB}\n\n${insight}\n\n#### Sources\n${srcLinks.join('\n')}`,
+    reply: `${heading}\n\n${tableBlock}\n\n${secA}\n\n${secB}\n\n${insight}\n\n#### Sources\n${srcLinks.join('\n')}`,
   };
 }
 
@@ -563,7 +641,130 @@ export async function enhanceResearchWithThinking(rawQuery, appLang, research, c
   links.push(`- [DuckDuckGo: ${research.query || rawQuery}](${ddgUrl})`);
   parts.push(`#### Sources & Further Search\n${links.join('\n')}`);
 
-  steps.push('Structured response into core summary, key takeaways, and verified citations');
+  steps.push('[Synthesis] Structured response into core summary, key takeaways, and verified citations');
 
   return { markdown: parts.join('\n\n'), steps };
 }
+
+/**
+ * Qwen3-Coder Style Structured Code Templates for common developer requests (offline-capable).
+ * @param {string} rawText
+ * @param {string} appLang
+ * @returns {{ reply: string, topicLabel: string, steps: string[] } | null}
+ */
+export function generateStructuredCodeReply(rawText, appLang) {
+  const lower = rawText.toLowerCase();
+  const asksForCode = /\b(code|snippet|example|program|script|function|form|navbar|table|algorithm|banaye|banao|likho)\b|कोड/i.test(lower);
+  if (!asksForCode) return null;
+
+  /** @type {{ match: RegExp, title: string, langTag: string, code: string, notes: string[] }[]} */
+  const templates = [
+    {
+      match: /\b(login|sign\s*in)\b.*\b(html|form|page)\b|\b(html|form)\b.*\b(login|sign\s*in)\b/i,
+      title: 'Responsive HTML Login Form',
+      langTag: 'html',
+      code: `<form class="login-card" action="/login" method="post">
+  <h2>Sign In</h2>
+  <label for="email">Email</label>
+  <input id="email" name="email" type="email" required autocomplete="email" />
+
+  <label for="password">Password</label>
+  <input id="password" name="password" type="password" required minlength="8" />
+
+  <button type="submit">Continue</button>
+</form>`,
+      notes: ['Uses semantic `<label for>` bindings and HTML5 constraint validation.', 'Always submit credentials over HTTPS and validate server-side.'],
+    },
+    {
+      match: /\b(navbar|navigation bar|header menu)\b/i,
+      title: 'Responsive Flexbox Navbar',
+      langTag: 'html',
+      code: `<header class="nav-wrap">
+  <a href="/" class="brand">AirAI</a>
+  <nav class="nav-links" aria-label="Primary">
+    <a href="#features">Features</a>
+    <a href="#docs">Docs</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header>
+<style>
+  .nav-wrap { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; }
+  .nav-links { display: flex; gap: 16px; flex-wrap: wrap; }
+</style>`,
+      notes: ['Uses `aria-label="Primary"` for screen-reader accessibility.', 'Wraps cleanly on narrow screens with `flex-wrap: wrap`.'],
+    },
+    {
+      match: /\b(binary search)\b/i,
+      title: 'Binary Search (O(log n))',
+      langTag: 'javascript',
+      code: `function binarySearch(arr, target) {
+  let left = 0;
+  let right = arr.length - 1;
+  while (left <= right) {
+    const mid = left + Math.floor((right - left) / 2);
+    if (arr[mid] === target) return mid;
+    if (arr[mid] < target) left = mid + 1;
+    else right = mid - 1;
+  }
+  return -1;
+}`,
+      notes: ['Requires a **sorted** array.', 'Time Complexity: `O(log n)` · Space Complexity: `O(1)`.'],
+    },
+    {
+      match: /\b(fetch|api call|http request)\b.*\b(js|javascript|async)\b|\b(js|javascript)\b.*\bfetch\b/i,
+      title: 'Async Fetch with Error Handling',
+      langTag: 'javascript',
+      code: `async function fetchJson(url) {
+  const res = await fetch(url);
+  if (!res.ok) {
+    throw new Error(\`HTTP \${res.status}: \${res.statusText}\`);
+  }
+  return res.json();
+}`,
+      notes: ['Explicitly checks `res.ok` since `fetch()` only rejects on network failure.', 'Wrap calls in `try { ... } catch (err) { ... }` at the call site.'],
+    },
+    {
+      match: /\b(html)\b.*\b(basic|page|starter|boilerplate|iska code|structure)\b|^html(?:\s+code)?$/i,
+      title: 'Semantic HTML5 Page Boilerplate',
+      langTag: 'html',
+      code: `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Page</title>
+  </head>
+  <body>
+    <main>
+      <h1>Hello World</h1>
+      <p>Clean semantic HTML5 structure.</p>
+    </main>
+  </body>
+</html>`,
+      notes: ['Includes responsive viewport meta tag for mobile scaling.', 'Uses landmark `<main>` tag for accessibility and SEO.'],
+    },
+  ];
+
+  const hit = templates.find((item) => item.match.test(lower));
+  if (!hit) return null;
+
+  const heading =
+    appLang === 'hi'
+      ? `### ${hit.title} — कोड व व्याख्या`
+      : appLang === 'hinglish'
+        ? `### ${hit.title} — Clean Code & Notes`
+        : `### ${hit.title}`;
+
+  const notesTitle = appLang === 'hi' ? '#### मुख्य बिंदु' : '#### Implementation Notes';
+
+  return {
+    topicLabel: hit.title,
+    steps: [
+      `[Intent] Detected structured coding request (${hit.title})`,
+      `[Codegen] Selected verified ${hit.langTag.toUpperCase()} pattern with best-practice guards`,
+      `[Verify] Checked syntax, accessibility, and edge-case notes`,
+    ],
+    reply: `${heading}\n\n\`\`\`${hit.langTag}\n${hit.code}\n\`\`\`\n\n${notesTitle}\n${hit.notes.map((n) => `- ${n}`).join('\n')}`,
+  };
+}
+

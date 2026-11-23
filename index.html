@@ -3,12 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>MyAI — Offline Multilingual Assistant</title>
+    <title>AirAI — Offline Multilingual Assistant</title>
     <meta
       name="description"
       content="Offline-capable multilingual AI chatbot with voice input, text-to-speech, and local storage persistence."
     />
-    <meta property="og:title" content="MyAI — Offline Multilingual Assistant" />
+    <meta property="og:title" content="AirAI — Offline Multilingual Assistant" />
     <meta
       property="og:description"
       content="Offline-capable multilingual AI chatbot with voice input, text-to-speech, and local storage persistence."
@@ -19,7 +19,7 @@
     <link
       rel="icon"
       type="image/svg+xml"
-      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48' fill='none'%3E%3Crect x='4' y='4' width='40' height='40' rx='12' fill='%230d9488'/%3E%3Cpath d='M15 31V17L24 26L33 17V31' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='24' cy='14' r='2.2' fill='white'/%3E%3C/svg%3E"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48' fill='none'%3E%3Crect x='4' y='4' width='40' height='40' rx='12' fill='%230d9488'/%3E%3Cpath d='M16 32L24 14L32 32M19 25.5H29' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -33,22 +33,21 @@
   </head>
   <body>
     <!-- ChatGPT-Style Splash / Flash Screen -->
-    <div id="splash-screen" class="splash-screen" role="status" aria-label="Loading MyAI">
+    <div id="splash-screen" class="splash-screen" role="status" aria-label="Loading AirAI">
       <div class="splash-inner">
         <div class="splash-logo" aria-hidden="true">
           <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="4" y="4" width="40" height="40" rx="12" stroke="currentColor" stroke-width="2.5" />
             <path
-              d="M15 31V17L24 26L33 17V31"
+              d="M16 32L24 14L32 32M19 25.5H29"
               stroke="currentColor"
               stroke-width="2.75"
               stroke-linecap="round"
               stroke-linejoin="round"
             />
-            <circle cx="24" cy="14" r="2" fill="currentColor" />
           </svg>
         </div>
-        <h1 class="splash-title">MyAI</h1>
+        <h1 class="splash-title">AirAI</h1>
         <p id="splash-subtitle" class="splash-subtitle">Offline Multilingual Assistant</p>
         <div class="splash-progress-track" aria-hidden="true">
           <div class="splash-progress-fill"></div>
@@ -64,12 +63,12 @@
       <!-- Collapsible Sidebar -->
       <aside id="sidebar" class="sidebar" aria-label="Chat history and preferences">
         <div class="sidebar-header">
-          <button id="brand-home-btn" class="brand-mark" type="button" title="MyAI">
+          <button id="brand-home-btn" class="brand-mark" type="button" title="AirAI">
             <span class="brand-icon" aria-hidden="true">
               <svg viewBox="0 0 32 32" fill="none">
                 <rect x="2" y="2" width="28" height="28" rx="8" stroke="currentColor" stroke-width="2.2" />
                 <path
-                  d="M10 21V11L16 17L22 11V21"
+                  d="M10.5 21.5L16 9.5L21.5 21.5M12.5 17.5H19.5"
                   stroke="currentColor"
                   stroke-width="2.2"
                   stroke-linecap="round"
@@ -77,7 +76,7 @@
                 />
               </svg>
             </span>
-            <span class="brand-name">MyAI</span>
+            <span class="brand-name">AirAI</span>
           </button>
 
           <button id="close-sidebar-mobile-btn" class="icon-btn mobile-only" type="button" aria-label="Close sidebar">
@@ -161,6 +160,20 @@
           </div>
 
           <div class="topbar-right">
+            <label class="lang-select-wrap model-select-wrap" aria-label="Select reasoning mode">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true">
+                <path
+                  d="M9.5 4a3.5 3.5 0 0 0-3.5 3.5c0 .4.07.79.2 1.15A3.5 3.5 0 0 0 5 11.5c0 1.25.66 2.35 1.65 2.96A3.5 3.5 0 0 0 10 19.5h1.5V4h-2zM14.5 4a3.5 3.5 0 0 1 3.5 3.5c0 .4-.07.79-.2 1.15A3.5 3.5 0 0 1 19 11.5c0 1.25-.66 2.35-1.65 2.96A3.5 3.5 0 0 1 14 19.5h-1.5V4h2z"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+              <select id="model-mode-select" class="lang-select">
+                <option value="think">Qwen3 · Think</option>
+                <option value="fast">Qwen3 · Fast</option>
+              </select>
+            </label>
+
             <label class="lang-select-wrap" aria-label="Select language">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true">
                 <circle cx="12" cy="12" r="9" />
@@ -227,7 +240,7 @@
               <svg viewBox="0 0 48 48" fill="none">
                 <rect x="4" y="4" width="40" height="40" rx="12" stroke="currentColor" stroke-width="2.4" />
                 <path
-                  d="M15 31V17L24 26L33 17V31"
+                  d="M16 32L24 14L32 32M19 25.5H29"
                   stroke="currentColor"
                   stroke-width="2.6"
                   stroke-linecap="round"
@@ -242,7 +255,7 @@
             <div id="starter-grid" class="starter-grid"></div>
 
             <!-- Publisher Guide, FAQ & Legal Navigation for Transparency & Crawlability -->
-            <section class="publisher-overview" aria-label="How MyAI Works and FAQ">
+            <section class="publisher-overview" aria-label="How AirAI Works and FAQ">
               <div class="overview-grid">
                 <article class="overview-card">
                   <h3>Offline Local Storage</h3>
@@ -269,7 +282,7 @@
 
               <div class="faq-list">
                 <details class="faq-item">
-                  <summary>How does MyAI work without a backend server?</summary>
+                  <summary>How does AirAI work without a backend server?</summary>
                   <p>
                     Built-in knowledge, math evaluation, unit conversions, and your Custom Memory run directly in
                     JavaScript inside your browser. Chat history is stored locally on your device.
@@ -278,7 +291,7 @@
                 <details class="faq-item">
                   <summary>Where do Browser Research answers come from?</summary>
                   <p>
-                    When Browser Research Mode is active and you are online, MyAI queries open Wikipedia and Free
+                    When Browser Research Mode is active and you are online, AirAI queries open Wikipedia and Free
                     Dictionary endpoints directly from your browser and includes clickable source links.
                   </p>
                 </details>
@@ -366,8 +379,8 @@
               id="prompt-input"
               class="prompt-input"
               rows="1"
-              placeholder="Message MyAI..."
-              aria-label="Message MyAI"
+              placeholder="Message AirAI..."
+              aria-label="Message AirAI"
             ></textarea>
 
             <button
@@ -388,7 +401,7 @@
           </form>
 
           <p id="composer-footnote" class="composer-footnote">
-            MyAI runs offline in your browser · Chats saved in local storage
+            AirAI runs offline in your browser · Chats saved in local storage
           </p>
         </footer>
       </div>
@@ -459,7 +472,7 @@
           <div class="setting-row">
             <div class="setting-info">
               <label for="setting-auto-tts" id="label-setting-autotts">Auto-Speak Replies</label>
-              <p id="desc-setting-autotts">Automatically read MyAI responses aloud after replying.</p>
+              <p id="desc-setting-autotts">Automatically read AirAI responses aloud after replying.</p>
             </div>
             <input id="setting-auto-tts" type="checkbox" class="toggle-switch" />
           </div>
@@ -500,7 +513,7 @@
         <!-- Custom Memory Tab Panel -->
         <div id="panel-memory" class="modal-body hidden">
           <p id="memory-intro" class="memory-intro">
-            Teach MyAI custom answers or facts offline. When you ask a matching question, MyAI will use your saved knowledge.
+            Teach AirAI custom answers or facts offline. When you ask a matching question, AirAI will use your saved knowledge.
           </p>
 
           <form id="memory-form" class="memory-form">
@@ -513,7 +526,7 @@
             <textarea
               id="memory-answer-input"
               rows="2"
-              placeholder="Answer MyAI should remember..."
+              placeholder="Answer AirAI should remember..."
               required
             ></textarea>
             <button id="memory-save-btn" class="primary-btn" type="submit">Save to Offline Memory</button>
@@ -533,7 +546,7 @@
     <!-- Non-Blocking Cookie & Privacy Consent Notice -->
     <aside id="consent-banner" class="consent-banner hidden" role="dialog" aria-label="Privacy and cookie preferences">
       <div class="consent-text">
-        <strong>Privacy &amp; Cookies Notice:</strong> MyAI stores chats and learned topics locally in your browser.
+        <strong>Privacy &amp; Cookies Notice:</strong> AirAI stores chats and learned topics locally in your browser.
         Third-party advertising partners (such as Google AdSense) may use cookies to serve relevant ads. See our
         <a href="./privacy-policy.html">Privacy Policy</a>.
       </div>
@@ -545,7 +558,7 @@
 
     <noscript>
       <div class="noscript-box">
-        <h2>MyAI — Offline Multilingual Assistant</h2>
+        <h2>AirAI — Offline Multilingual Assistant</h2>
         <p>
           Please enable JavaScript to use the interactive chat, voice input, and browser research features. Read our
           <a href="./about.html">About</a>, <a href="./privacy-policy.html">Privacy Policy</a>,

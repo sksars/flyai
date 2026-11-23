@@ -888,6 +888,51 @@ select:focus-visible {
   margin-bottom: 0;
 }
 
+.thinking-block.is-streaming .thinking-summary-icon {
+  animation: splashPulse 1.1s var(--ease-out) infinite;
+}
+
+.thinking-phase-tag {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--accent);
+  margin-right: 4px;
+}
+
+.md-table-wrap {
+  margin: 12px 0;
+  overflow-x: auto;
+  border-radius: 10px;
+  border: 1px solid var(--border-hairline);
+}
+
+.md-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  line-height: 1.45;
+}
+
+.md-table th,
+.md-table td {
+  padding: 9px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-hairline);
+  vertical-align: top;
+}
+
+.md-table th {
+  background: var(--bg-surface);
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.md-table tr:last-child td {
+  border-bottom: none;
+}
+
 .assistant-content ul,
 .assistant-content ol {
   margin: 6px 0 12px;
@@ -1929,6 +1974,10 @@ body.legal-body {
   .lang-select {
     max-width: 88px;
     font-size: 0.78rem;
+  }
+
+  .model-select-wrap .lang-select {
+    max-width: 96px;
   }
 
   .starter-grid,

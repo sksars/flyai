@@ -1,5 +1,5 @@
 /**
- * MyAI Client-Side Browser Research Module
+ * AirAI Client-Side Browser Research Module
  * Performs high-accuracy, context-dependent client-side research using
  * CORS-enabled Wikipedia Search/Summary/Extracts/Langlinks APIs and Dictionary API.
  */
@@ -108,6 +108,92 @@ export function cleanWikiExtract(text) {
     .trim();
 }
 
+const CONVERSATIONAL_WORDS = new Set([
+  'hi', 'hey', 'hello', 'helo', 'hlo', 'hola', 'bonjour', 'namaste', 'namaskar', 'pranam', 'salam',
+  'bye', 'goodbye', 'alvida', 'ok', 'okay', 'kk', 'k', 'alright', 'yes', 'yep', 'yeah', 'yup',
+  'no', 'nope', 'nah', 'nahi', 'nhi', 'na', 'naa', 'haan', 'haa', 'ha', 'hn', 'ji', 'hanji',
+  'accha', 'achha', 'acha', 'theek', 'thik', 'thk', 'sahi', 'badhiya', 'badiya', 'mast', 'super', 'zabardast',
+  'hmm', 'hm', 'mm', 'uh', 'um', 'oh', 'ah', 'arre', 'arey', 'oye', 'wah', 'wow',
+  'nice', 'cool', 'good', 'great', 'awesome', 'amazing', 'fantastic', 'fine', 'well', 'done',
+  'thank', 'thanks', 'thankyou', 'shukriya', 'dhanyawad', 'gracias', 'merci',
+  'sorry', 'maaf', 'please', 'pls', 'plz', 'excuse', 'wait', 'ruko',
+  'bhai', 'bhaiya', 'bro', 'yaar', 'yr', 'dost', 'friend', 'sir', 'madam', 'mate', 'buddy', 'dude', 'boss', 'airai',
+  'batao', 'btao', 'bataiye', 'btaiye', 'bolo', 'bol', 'suno', 'sun', 'dekho', 'listen', 'tell', 'help', 'samjhao', 'smjhao', 'dikhao',
+  'samajh', 'smjh', 'gaya', 'gya', 'gayi', 'gyi', 'gaye', 'got', 'understood', 'clear', 'noted',
+  'kya', 'kyun', 'kyu', 'kaise', 'kaisa', 'kaisi', 'kaun', 'kon', 'kab', 'kahan', 'kitna', 'kuch',
+  'ab', 'to', 'toh', 'phir', 'fir', 'bhi', 'aur', 'bas', 'abhi', 'chal', 'chalo', 'chalta', 'chalti', 'ek', 'koi',
+  'kar', 'kr', 'karo', 'kro', 'karein', 'karu', 'karenge', 'karna', 'raha', 'rha', 'rahi', 'rhi', 'rahe', 'rhe',
+  'ho', 'hu', 'hoon', 'hun', 'h', 'hai', 'hain', 'tha', 'thi', 'the', 'sab', 'lag', 'laga',
+  'main', 'hum', 'tum', 'aap', 'tu', 'you', 'your', 'yours', 'im', 'am', 'mera', 'meri', 'tera', 'teri', 'aapka', 'tumhara',
+  'up', 'wassup', 'sup', 'whats', 'hows', 'doing', 'going', 'day', 'today', 'something', 'anything', 'everything', 'someone',
+  'bored', 'bore', 'tired', 'thak', 'sad', 'udaas', 'happy', 'khush', 'mood', 'off',
+  'really', 'seriously', 'sach', 'mein', 'me', 'actually', 'just', 'nothing',
+  'lol', 'haha', 'hehe', 'lmao', 'rofl', 'morning', 'evening', 'afternoon', 'night', 'haal', 'baat',
+]);
+
+function collapseElongatedWord(word) {
+  return word.toLowerCase().replace(/(.)\1+$/g, '$1');
+}
+
+function isPureConversationalPhrase(text) {
+  const tokens = text
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}\s']/gu, ' ')
+    .split(/\s+/)
+    .filter(Boolean);
+  if (tokens.length === 0) return true;
+  return tokens.every((tok) => {
+    const collapsed = collapseElongatedWord(tok);
+    const semiCollapsed = tok.replace(/(.)\1+/g, '$1$1');
+    return (
+      CONVERSATIONAL_WORDS.has(tok) ||
+      CONVERSATIONAL_WORDS.has(collapsed) ||
+      CONVERSATIONAL_WORDS.has(semiCollapsed) ||
+      STOP_WORDS.has(tok)
+    );
+  });
+}
+
+/**
+ * Determine whether a prompt genuinely requires live browser/Wikipedia research.
+ * Understands human communication words carefully so casual chat never triggers web search.
+ * @param {string} rawText
+ * @returns {boolean}
+ */
+export function needsBrowserResearch(rawText) {
+  const trimmed = rawText.trim();
+  if (!trimmed) return false;
+
+  if (isExplicitResearchRequest(trimmed) || isCodeRequest(trimmed)) {
+    return true;
+  }
+
+  // Explicit definition or factual question structures always merit research
+  if (
+    /^(?:define|meaning of|definition of|what is|what are|who is|who are|who was|who invented|where is|when was|why does|how does|history of|benefits of|advantages of|difference between)\b/i.test(
+      trimmed
+    ) ||
+    /\b(?:ka matlab|kya hota hai|kya hoti hai|ke bare mein|ke baare mein|kisne banaya|kaun tha|vs\.?|versus)\b|क्या होता है|कौन था|किसने बनाया|के बारे में/i.test(
+      trimmed
+    )
+  ) {
+    return true;
+  }
+
+  // Reject purely conversational / filler / greeting / emotional phrases
+  if (isPureConversationalPhrase(trimmed)) {
+    return false;
+  }
+
+  const cleaned = extractSearchQuery(trimmed);
+  const meaningfulTokens = getQueryTokens(cleaned).filter((tok) => {
+    const collapsed = collapseElongatedWord(tok);
+    return !CONVERSATIONAL_WORDS.has(tok) && !CONVERSATIONAL_WORDS.has(collapsed);
+  });
+
+  return meaningfulTokens.length > 0;
+}
+
 /**
  * Detect whether the user's message depends on the previous chat topic/context.
  * @param {string} text
@@ -115,6 +201,9 @@ export function cleanWikiExtract(text) {
  */
 export function isFollowUpReference(text) {
   const trimmed = text.trim();
+  if (isPureConversationalPhrase(trimmed)) {
+    return false;
+  }
   if (
     /^(?:more|more details|tell me more|explain more|continue|elaborate|go on|next|aur|aur batao|aur detail|detail mein|detail me|vishtar se|aage batao|और बताओ|विस्तार से)[?!.\s]*$/i.test(
       trimmed
@@ -131,6 +220,9 @@ export function isFollowUpReference(text) {
   }
   if (
     /\b(it|its|this|that|he|him|his|she|her|they|their|them|there|uska|uski|uske|unke|unka|unki|iska|iski|iske|inhe|inhone|unhone|wo|woh|yeh|wahan|usme|isme)\b|इसके|उसके|उनके|वहाँ|यहाँ|उसने|इसने/i.test(
+      trimmed
+    ) &&
+    !/\b(?:got it|thank you for that|thanks for that|that's nice|that is nice|that's cool|that's great|ok that|it's ok|it is ok)\b/i.test(
       trimmed
     )
   ) {
@@ -300,6 +392,7 @@ async function tryDictionaryLookup(rawQuery, allowSingleWord = false) {
     trimmed.match(/^([a-zA-Z-]{2,32})\s+(?:ka matlab|meaning)[?!.]*$/i);
 
   let rawWord = defMatch ? defMatch[1].toLowerCase() : '';
+  const isExplicitDefine = Boolean(rawWord);
   if (!rawWord && allowSingleWord) {
     const cleanSingle = trimmed.replace(/[?!.]+$/g, '');
     if (/^[a-zA-Z]{2,24}$/.test(cleanSingle)) {
@@ -308,8 +401,15 @@ async function tryDictionaryLookup(rawQuery, allowSingleWord = false) {
   }
   if (!rawWord) return null;
 
+  const collapsed = collapseElongatedWord(rawWord);
+  if (
+    !isExplicitDefine &&
+    (CONVERSATIONAL_WORDS.has(rawWord) || CONVERSATIONAL_WORDS.has(collapsed))
+  ) {
+    return null;
+  }
+
   const candidates = [rawWord];
-  const collapsed = rawWord.replace(/(.)\1+$/g, '$1');
   if (collapsed && collapsed !== rawWord) candidates.push(collapsed);
   const fullCollapsed = rawWord.replace(/(.)\1+/g, '$1$1');
   if (fullCollapsed && !candidates.includes(fullCollapsed)) candidates.push(fullCollapsed);
@@ -903,7 +1003,7 @@ export function formatResearchMarkdown(rawQuery, appLang, research) {
 
 /**
  * Extract a compact offline knowledge record from a successful research result
- * so MyAI remembers what to say even when offline later.
+ * so AirAI remembers what to say even when offline later.
  * @param {{ ok: boolean, query: string, dictionary?: any, codeSnippet?: { title: string, language: string, explanation: string, code: string, url: string }, results?: Array<{ title: string, description: string, extract: string, url: string }> }} research
  * @returns {{ title: string, query: string, summary: string, url: string } | null}
  */

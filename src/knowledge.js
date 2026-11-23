@@ -1,5 +1,5 @@
 /**
- * MyAI Offline Multilingual Knowledge Engine & UI Localization
+ * AirAI Offline Multilingual Knowledge Engine & UI Localization
  * Runs 100% client-side with zero server calls.
  */
 
@@ -26,8 +26,8 @@ export const UI_TEXT = {
     welcomeHeading: 'How can I help you today?',
     welcomeSubheading:
       'Ask questions, solve math, write code, or speak using your microphone — completely offline.',
-    placeholder: 'Message MyAI...',
-    footnote: 'MyAI runs offline in your browser · Chats saved in local storage',
+    placeholder: 'Message AirAI...',
+    footnote: 'AirAI runs offline in your browser · Chats saved in local storage',
     listening: 'Listening... speak now',
     stop: 'Stop',
     copy: 'Copy',
@@ -40,7 +40,7 @@ export const UI_TEXT = {
     langLabel: 'Assistant Language',
     langDesc: 'Controls UI text, replies, voice recognition, and speech voice.',
     autoTtsLabel: 'Auto-Speak Replies',
-    autoTtsDesc: 'Automatically read MyAI responses aloud after replying.',
+    autoTtsDesc: 'Automatically read AirAI responses aloud after replying.',
     autoSendLabel: 'Auto-Send Voice Input',
     autoSendDesc: 'Automatically submit your spoken question when recording ends.',
     rateLabel: 'Speech Speed',
@@ -49,9 +49,9 @@ export const UI_TEXT = {
     clearChatsDesc: 'Delete every saved chat thread from local storage.',
     clearChatsBtn: 'Clear All',
     memoryIntro:
-      'Teach MyAI custom answers or facts offline. When you ask a matching question, MyAI will use your saved knowledge.',
+      'Teach AirAI custom answers or facts offline. When you ask a matching question, AirAI will use your saved knowledge.',
     memoryQPlaceholder: 'Question or keyword (e.g. my wifi password)',
-    memoryAPlaceholder: 'Answer MyAI should remember...',
+    memoryAPlaceholder: 'Answer AirAI should remember...',
     memorySaveBtn: 'Save to Offline Memory',
     memoryEmpty: 'No custom memories saved yet.',
     micUnsupported: 'Voice input is not supported in this browser. Try Chrome or Edge.',
@@ -69,12 +69,15 @@ export const UI_TEXT = {
     learnedHeading: 'Learned from Browser',
     learnedEmpty: 'No topics learned from browser research yet.',
     clearLearnedBtn: 'Clear',
-    thinkingBtn: 'High Thinking MML',
-    thinkingStatus: 'Thinking deeply (MML)...',
-    thinkingLabel: 'High Thinking Model (MML)',
-    thinkingDesc: 'Enable multi-step reasoning, step-by-step math, dual comparisons, and deep synthesis.',
-    thinkingSummaryLabel: 'MML Reasoning',
+    thinkingBtn: 'Qwen3 Thinking Mode',
+    thinkingStatus: 'Thinking (Qwen3-MML)...',
+    thinkingLiveLabel: 'Thinking...',
+    thinkingLabel: 'Qwen3 Hybrid Thinking (MML)',
+    thinkingDesc: 'Enable live multi-step thought streaming, equation verification, table comparisons, and /think or /no_think.',
+    thinkingSummaryLabel: 'Thought process',
     thinkingStepsWord: 'steps',
+    modelThinkLabel: 'Qwen3 · Think',
+    modelFastLabel: 'Qwen3 · Fast',
   },
   hi: {
     splashSubtitle: 'ऑफ़लाइन बहुभाषी सहायक',
@@ -89,8 +92,8 @@ export const UI_TEXT = {
     welcomeHeading: 'आज मैं आपकी क्या मदद कर सकता हूँ?',
     welcomeSubheading:
       'सवाल पूछें, गणित हल करें, कोड लिखें, या माइक से बोलकर पूछें — पूरी तरह ऑफ़लाइन।',
-    placeholder: 'MyAI को संदेश लिखें...',
-    footnote: 'MyAI आपके ब्राउज़र में ऑफ़लाइन चलता है · चैट लोकल स्टोरेज में सहेजी जाती है',
+    placeholder: 'AirAI को संदेश लिखें...',
+    footnote: 'AirAI आपके ब्राउज़र में ऑफ़लाइन चलता है · चैट लोकल स्टोरेज में सहेजी जाती है',
     listening: 'सुन रहा हूँ... अब बोलें',
     stop: 'रोकें',
     copy: 'कॉपी',
@@ -103,7 +106,7 @@ export const UI_TEXT = {
     langLabel: 'सहायक की भाषा',
     langDesc: 'UI टेक्स्ट, उत्तर, वॉइस इनपुट और बोलने की भाषा नियंत्रित करता है।',
     autoTtsLabel: 'उत्तर अपने-आप बोलें',
-    autoTtsDesc: 'जवाब आने के बाद MyAI उत्तर को खुद पढ़कर सुनाएगा।',
+    autoTtsDesc: 'जवाब आने के बाद AirAI उत्तर को खुद पढ़कर सुनाएगा।',
     autoSendLabel: 'वॉइस इनपुट ऑटो-सबमिट',
     autoSendDesc: 'बोलना समाप्त होने पर सवाल अपने-आप भेजें।',
     rateLabel: 'बोलने की गति',
@@ -112,9 +115,9 @@ export const UI_TEXT = {
     clearChatsDesc: 'लोकल स्टोरेज से सभी सहेजी गई बातचीत हटाएँ।',
     clearChatsBtn: 'सब हटाएँ',
     memoryIntro:
-      'MyAI को ऑफ़लाइन नई बातें सिखाएँ। जब आप मिलता-जुलता सवाल पूछेंगे, तो MyAI आपकी सहेजी गई जानकारी से जवाब देगा।',
+      'AirAI को ऑफ़लाइन नई बातें सिखाएँ। जब आप मिलता-जुलता सवाल पूछेंगे, तो AirAI आपकी सहेजी गई जानकारी से जवाब देगा।',
     memoryQPlaceholder: 'सवाल या कीवर्ड (जैसे: मेरा वाईफाई पासवर्ड)',
-    memoryAPlaceholder: 'जवाब जो MyAI को याद रखना है...',
+    memoryAPlaceholder: 'जवाब जो AirAI को याद रखना है...',
     memorySaveBtn: 'ऑफ़लाइन मेमोरी में सहेजें',
     memoryEmpty: 'अभी कोई कस्टम मेमोरी सहेजी नहीं गई है।',
     micUnsupported: 'इस ब्राउज़र में वॉइस इनपुट उपलब्ध नहीं है। Chrome या Edge आज़माएँ।',
@@ -132,12 +135,15 @@ export const UI_TEXT = {
     learnedHeading: 'ब्राउज़र से सीखी गई जानकारी',
     learnedEmpty: 'अभी ब्राउज़र रिसर्च से कोई विषय नहीं सीखा गया है।',
     clearLearnedBtn: 'साफ़ करें',
-    thinkingBtn: 'हाई थिंकिंग MML',
-    thinkingStatus: 'गहन विश्लेषण हो रहा है (MML)...',
-    thinkingLabel: 'हाई थिंकिंग मॉडल (MML)',
-    thinkingDesc: 'मल्टी-स्टेप रीज़निंग, चरणबद्ध गणित, तुलना और गहन रिसर्च संश्लेषण चालू करें।',
-    thinkingSummaryLabel: 'MML विचार प्रक्रिया',
+    thinkingBtn: 'Qwen3 थिंकिंग मोड',
+    thinkingStatus: 'सोच रहा हूँ (Qwen3-MML)...',
+    thinkingLiveLabel: 'सोच रहा हूँ...',
+    thinkingLabel: 'Qwen3 हाइब्रिड थिंकिंग (MML)',
+    thinkingDesc: 'लाइव चरणबद्ध विचार, समीकरण सत्यापन, तुलना तालिका और /think व /no_think कमांड चालू करें।',
+    thinkingSummaryLabel: 'विचार प्रक्रिया',
     thinkingStepsWord: 'चरण',
+    modelThinkLabel: 'Qwen3 · Think',
+    modelFastLabel: 'Qwen3 · Fast',
   },
   hinglish: {
     splashSubtitle: 'Offline Multilingual Assistant',
@@ -152,8 +158,8 @@ export const UI_TEXT = {
     welcomeHeading: 'Aaj main aapki kya madad kar sakta hoon?',
     welcomeSubheading:
       'Sawal poochein, math solve karein, code likhein, ya mic se bolkar poochein — bina internet aur server ke.',
-    placeholder: 'MyAI ko message likhein...',
-    footnote: 'MyAI offline local storage par chalta hai · Bina server ke',
+    placeholder: 'AirAI ko message likhein...',
+    footnote: 'AirAI offline local storage par chalta hai · Bina server ke',
     listening: 'Sun raha hoon... ab bolein',
     stop: 'Rokein',
     copy: 'Copy',
@@ -166,7 +172,7 @@ export const UI_TEXT = {
     langLabel: 'Assistant Language',
     langDesc: 'UI text, jawab, voice input aur bolne ki language set karta hai.',
     autoTtsLabel: 'Auto-Speak Replies',
-    autoTtsDesc: 'Jawab aane ke baad MyAI apne aap bolkar sunayega.',
+    autoTtsDesc: 'Jawab aane ke baad AirAI apne aap bolkar sunayega.',
     autoSendLabel: 'Auto-Send Voice Input',
     autoSendDesc: 'Bolna khatam hone par sawal apne aap send ho jayega.',
     rateLabel: 'Speech Speed',
@@ -175,9 +181,9 @@ export const UI_TEXT = {
     clearChatsDesc: 'Local storage se sabhi saved chats delete karein.',
     clearChatsBtn: 'Clear All',
     memoryIntro:
-      'MyAI ko offline naye answers sikhayein. Jab aap waisa sawal poochenge toh MyAI aapke saved data se jawab dega.',
+      'AirAI ko offline naye answers sikhayein. Jab aap waisa sawal poochenge toh AirAI aapke saved data se jawab dega.',
     memoryQPlaceholder: 'Sawal ya keyword (jaise: mera exam date)',
-    memoryAPlaceholder: 'Jawab jo MyAI yaad rakhe...',
+    memoryAPlaceholder: 'Jawab jo AirAI yaad rakhe...',
     memorySaveBtn: 'Offline Memory Mein Save Karein',
     memoryEmpty: 'Abhi koi custom memory save nahi hai.',
     micUnsupported: 'Is browser mein voice input support nahi hai. Chrome ya Edge use karein.',
@@ -195,12 +201,15 @@ export const UI_TEXT = {
     learnedHeading: 'Browser Se Seekha Hua',
     learnedEmpty: 'Abhi browser research se koi topic save nahi hua hai.',
     clearLearnedBtn: 'Clear',
-    thinkingBtn: 'High Thinking MML',
-    thinkingStatus: 'Deep thinking chal rahi hai (MML)...',
-    thinkingLabel: 'High Thinking Model (MML)',
-    thinkingDesc: 'Multi-step reasoning, step-by-step math, comparison aur deep browser synthesis on rakhein.',
-    thinkingSummaryLabel: 'MML Thinking Process',
+    thinkingBtn: 'Qwen3 Thinking Mode',
+    thinkingStatus: 'Soch raha hoon (Qwen3-MML)...',
+    thinkingLiveLabel: 'Thinking...',
+    thinkingLabel: 'Qwen3 Hybrid Thinking (MML)',
+    thinkingDesc: 'Live step-by-step thinking, equation check, comparison table aur /think ya /no_think support on karein.',
+    thinkingSummaryLabel: 'Thought Process',
     thinkingStepsWord: 'steps',
+    modelThinkLabel: 'Qwen3 · Think',
+    modelFastLabel: 'Qwen3 · Fast',
   },
   es: {
     splashSubtitle: 'Asistente Multilingüe Sin Conexión',
@@ -215,8 +224,8 @@ export const UI_TEXT = {
     welcomeHeading: '¿En qué puedo ayudarte hoy?',
     welcomeSubheading:
       'Haz preguntas, resuelve matemáticas, escribe código o usa el micrófono — totalmente sin conexión.',
-    placeholder: 'Escribe a MyAI...',
-    footnote: 'MyAI funciona sin conexión en tu navegador · Guardado localmente',
+    placeholder: 'Escribe a AirAI...',
+    footnote: 'AirAI funciona sin conexión en tu navegador · Guardado localmente',
     listening: 'Escuchando... habla ahora',
     stop: 'Detener',
     copy: 'Copiar',
@@ -229,7 +238,7 @@ export const UI_TEXT = {
     langLabel: 'Idioma del Asistente',
     langDesc: 'Controla la interfaz, las respuestas, el dictado y la voz.',
     autoTtsLabel: 'Leer Respuestas Automáticamente',
-    autoTtsDesc: 'Reproduce en voz alta las respuestas de MyAI al terminar.',
+    autoTtsDesc: 'Reproduce en voz alta las respuestas de AirAI al terminar.',
     autoSendLabel: 'Enviar Voz Automáticamente',
     autoSendDesc: 'Envía tu pregunta automáticamente al terminar de hablar.',
     rateLabel: 'Velocidad de Voz',
@@ -238,9 +247,9 @@ export const UI_TEXT = {
     clearChatsDesc: 'Elimina todos los chats guardados del almacenamiento local.',
     clearChatsBtn: 'Borrar Todo',
     memoryIntro:
-      'Enseña respuestas personalizadas a MyAI sin conexión. Cuando preguntes algo similar, usará tu conocimiento guardado.',
+      'Enseña respuestas personalizadas a AirAI sin conexión. Cuando preguntes algo similar, usará tu conocimiento guardado.',
     memoryQPlaceholder: 'Pregunta o palabra clave',
-    memoryAPlaceholder: 'Respuesta que MyAI debe recordar...',
+    memoryAPlaceholder: 'Respuesta que AirAI debe recordar...',
     memorySaveBtn: 'Guardar en Memoria',
     memoryEmpty: 'Aún no hay memorias guardadas.',
     micUnsupported: 'El dictado por voz no es compatible con este navegador.',
@@ -258,12 +267,15 @@ export const UI_TEXT = {
     learnedHeading: 'Aprendido del Navegador',
     learnedEmpty: 'Aún no hay temas aprendidos desde el navegador.',
     clearLearnedBtn: 'Limpiar',
-    thinkingBtn: 'Pensamiento Profundo MML',
-    thinkingStatus: 'Analizando paso a paso (MML)...',
-    thinkingLabel: 'Modelo de Alto Razonamiento (MML)',
-    thinkingDesc: 'Activa razonamiento multipaso, matemáticas detalladas, comparaciones y síntesis profunda.',
-    thinkingSummaryLabel: 'Razonamiento MML',
+    thinkingBtn: 'Modo Qwen3 Thinking',
+    thinkingStatus: 'Pensando paso a paso (Qwen3)...',
+    thinkingLiveLabel: 'Pensando...',
+    thinkingLabel: 'Modelo Híbrido Qwen3 (MML)',
+    thinkingDesc: 'Activa pensamiento en vivo, verificación matemática, tablas comparativas y /think o /no_think.',
+    thinkingSummaryLabel: 'Proceso de pensamiento',
     thinkingStepsWord: 'pasos',
+    modelThinkLabel: 'Qwen3 · Think',
+    modelFastLabel: 'Qwen3 · Fast',
   },
   fr: {
     splashSubtitle: 'Assistant Multilingue Hors Ligne',
@@ -278,8 +290,8 @@ export const UI_TEXT = {
     welcomeHeading: "Comment puis-je vous aider aujourd'hui ?",
     welcomeSubheading:
       'Posez des questions, calculez, écrivez du code ou utilisez votre micro — 100 % hors ligne.',
-    placeholder: 'Écrire à MyAI...',
-    footnote: 'MyAI fonctionne hors ligne dans votre navigateur · Sauvegarde locale',
+    placeholder: 'Écrire à AirAI...',
+    footnote: 'AirAI fonctionne hors ligne dans votre navigateur · Sauvegarde locale',
     listening: 'Écoute en cours... parlez',
     stop: 'Arrêter',
     copy: 'Copier',
@@ -292,7 +304,7 @@ export const UI_TEXT = {
     langLabel: "Langue de l'Assistant",
     langDesc: "Définit la langue de l'interface, des réponses et de la voix.",
     autoTtsLabel: 'Lecture Automatique',
-    autoTtsDesc: 'Lit automatiquement à haute voix les réponses de MyAI.',
+    autoTtsDesc: 'Lit automatiquement à haute voix les réponses de AirAI.',
     autoSendLabel: 'Envoi Auto après Dictée',
     autoSendDesc: "Envoie votre question automatiquement dès que l'écoute s'arrête.",
     rateLabel: 'Vitesse de Lecture',
@@ -301,7 +313,7 @@ export const UI_TEXT = {
     clearChatsDesc: 'Supprime toutes les conversations du stockage local.',
     clearChatsBtn: 'Tout Effacer',
     memoryIntro:
-      'Apprenez des réponses personnalisées à MyAI hors ligne. Il utilisera vos notes enregistrées.',
+      'Apprenez des réponses personnalisées à AirAI hors ligne. Il utilisera vos notes enregistrées.',
     memoryQPlaceholder: 'Question ou mot-clé',
     memoryAPlaceholder: 'Réponse à retenir...',
     memorySaveBtn: 'Enregistrer',
@@ -321,12 +333,15 @@ export const UI_TEXT = {
     learnedHeading: 'Appris du Navigateur',
     learnedEmpty: 'Aucun sujet appris depuis le navigateur pour le moment.',
     clearLearnedBtn: 'Effacer',
-    thinkingBtn: 'Réflexion Avancée MML',
-    thinkingStatus: 'Analyse approfondie en cours (MML)...',
-    thinkingLabel: 'Modèle Haute Réflexion (MML)',
-    thinkingDesc: 'Active le raisonnement multi-étapes, les calculs détaillés et les comparaisons.',
-    thinkingSummaryLabel: 'Raisonnement MML',
+    thinkingBtn: 'Mode Réflexion Qwen3',
+    thinkingStatus: 'Réflexion en cours (Qwen3)...',
+    thinkingLiveLabel: 'Réflexion...',
+    thinkingLabel: 'Modèle Hybride Qwen3 (MML)',
+    thinkingDesc: 'Active la réflexion en direct, la vérification mathématique, les tableaux et /think ou /no_think.',
+    thinkingSummaryLabel: 'Processus de réflexion',
     thinkingStepsWord: 'étapes',
+    modelThinkLabel: 'Qwen3 · Think',
+    modelFastLabel: 'Qwen3 · Fast',
   },
   ar: {
     splashSubtitle: 'مساعد ذكي متعدد اللغات بدون إنترنت',
@@ -341,8 +356,8 @@ export const UI_TEXT = {
     welcomeHeading: 'كيف يمكنني مساعدتك اليوم؟',
     welcomeSubheading:
       'اطرح الأسئلة، احسب المسائل، اكتب الأكواد، أو تحدث بالميكروفون — بالكامل بدون خادم.',
-    placeholder: 'اكتب رسالتك لـ MyAI...',
-    footnote: 'يعمل MyAI بدون إنترنت في متصفحك · المحادثات محفوظة محلياً',
+    placeholder: 'اكتب رسالتك لـ AirAI...',
+    footnote: 'يعمل AirAI بدون إنترنت في متصفحك · المحادثات محفوظة محلياً',
     listening: 'جاري الاستماع... تحدث الآن',
     stop: 'إيقاف',
     copy: 'نسخ',
@@ -355,7 +370,7 @@ export const UI_TEXT = {
     langLabel: 'لغة المساعد',
     langDesc: 'تتحكم في لغة الواجهة والردود والتعرف الصوتي والنطق.',
     autoTtsLabel: 'نطق الردود تلقائياً',
-    autoTtsDesc: 'قراءة ردود MyAI بصوت عالٍ تلقائياً بعد الإجابة.',
+    autoTtsDesc: 'قراءة ردود AirAI بصوت عالٍ تلقائياً بعد الإجابة.',
     autoSendLabel: 'إرسال الصوت تلقائياً',
     autoSendDesc: 'إرسال سؤالك تلقائياً عند انتهاء التسجيل الصوتي.',
     rateLabel: 'سرعة النطق',
@@ -364,7 +379,7 @@ export const UI_TEXT = {
     clearChatsDesc: 'حذف جميع المحادثات المحفوظة من التخزين المحلي.',
     clearChatsBtn: 'مسح الكل',
     memoryIntro:
-      'علّم MyAI إجابات مخصصة بدون إنترنت. عند طرح سؤال مطابق سيستخدم معلوماتك المحفوظة.',
+      'علّم AirAI إجابات مخصصة بدون إنترنت. عند طرح سؤال مطابق سيستخدم معلوماتك المحفوظة.',
     memoryQPlaceholder: 'السؤال أو الكلمة المفتاحية',
     memoryAPlaceholder: 'الإجابة التي يجب تذكرها...',
     memorySaveBtn: 'حفظ في الذاكرة المحلية',
@@ -384,12 +399,15 @@ export const UI_TEXT = {
     learnedHeading: 'تم تعلّمه من المتصفح',
     learnedEmpty: 'لم يتم حفظ أي مواضيع من بحث المتصفح بعد.',
     clearLearnedBtn: 'مسح',
-    thinkingBtn: 'التفكير العميق MML',
-    thinkingStatus: 'جاري التفكير العميق (MML)...',
-    thinkingLabel: 'نموذج التفكير العالي (MML)',
-    thinkingDesc: 'تفعيل التفكير متعدد الخطوات، الحل التفصيلي للمسائل، والمقارنات الذكية.',
-    thinkingSummaryLabel: 'تحليل MML',
+    thinkingBtn: 'وضع التفكير Qwen3',
+    thinkingStatus: 'جاري التفكير العميق (Qwen3)...',
+    thinkingLiveLabel: 'جاري التفكير...',
+    thinkingLabel: 'نموذج التفكير الهجين Qwen3',
+    thinkingDesc: 'تفعيل البث المباشر للخطوات، التحقق الرياضي، جداول المقارنة، وأوامر /think و /no_think.',
+    thinkingSummaryLabel: 'عملية التفكير',
     thinkingStepsWord: 'خطوات',
+    modelThinkLabel: 'Qwen3 · Think',
+    modelFastLabel: 'Qwen3 · Fast',
   },
 };
 
@@ -422,7 +440,7 @@ export const STARTER_PROMPTS = {
     { title: 'Recherche Navigateur', prompt: 'Recherche Système Solaire' },
     { title: 'Calcul Rapide', prompt: 'Calcule (120 * 15) + 450' },
     { title: 'Code HTML & CSS', prompt: 'Montre-moi un exemple simple de bouton CSS' },
-    { title: 'Mémoire Hors Ligne', prompt: 'Retiens que mon projet s appelle MyAI' },
+    { title: 'Mémoire Hors Ligne', prompt: 'Retiens que mon projet s appelle AirAI' },
   ],
   ar: [
     { title: 'بحث المتصفح', prompt: 'ابحث عن الحوسبة الكمومية' },
@@ -626,11 +644,257 @@ function resolveReplyLanguage(text, selectedLang) {
   if (/[\u0600-\u06FF]/.test(text)) return 'ar';
   if (
     selectedLang === 'en' &&
-    /\b(kya|kaise|kitna|batao|yaad|rakho|mera|meri|tum|aap|hai|hain|karo|samjhao)\b/i.test(text)
+    /\b(kya|kaise|kitna|batao|btao|btaiye|yaad|rakho|mera|meri|tum|aap|hai|hain|karo|kro|samjhao|smjhao|accha|achha|theek|thik|thk|haan|nahi|nhi|shukriya|dhanyawad|badhiya|mast|samajh|smjh|bhai|yaar|yr|dost|suno|bolo|maaf|ruko|chalo|namaste|ab)\b/i.test(
+      text
+    )
   ) {
     return 'hinglish';
   }
   return selectedLang;
+}
+
+/**
+ * Normalize repeated trailing characters in casual chat words (e.g. "hiiiii" -> "hi", "okkkk" -> "ok").
+ * @param {string} text
+ * @returns {string}
+ */
+function normalizeChatText(text) {
+  return text
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}\s']/gu, ' ')
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((w) => w.replace(/(.)\1+$/g, '$1'))
+    .join(' ')
+    .trim();
+}
+
+/**
+ * Detect and reply naturally to everyday human communication words, reactions, moods, and vague prompts.
+ * Skips interception if the user explicitly asks to define/research a word.
+ * @param {string} trimmed
+ * @param {string} lang
+ * @returns {{ matched: true, kind: 'chitchat', topicLabel: string, reply: string } | null}
+ */
+function matchHumanCommunication(trimmed, lang) {
+  const lower = trimmed.toLowerCase().trim();
+  const normalized = normalizeChatText(trimmed);
+
+  // Never intercept if user explicitly asks for dictionary definition or browser research
+  if (
+    /\b(define|meaning of|definition of|ka matlab|wikipedia|wiki|research|search|google|browser se)\b|खोजो|सर्च|रिसर्च/i.test(
+      lower
+    )
+  ) {
+    return null;
+  }
+
+  const pick = (map) => map[lang] || map.en;
+
+  // 1. Casual greetings & how-are-you (supports elongated typing like "hii", "hellooo", "namasteee")
+  if (
+    /^(?:hi|hlo|helo|hello|hey|hola|bonjour|namaste|namaskar|pranam|salam|good morning|good afternoon|good evening|gm|ge|ga)(?:\s+(?:airai|bro|bhai|dost|friend|sir|yaar|there))?$/i.test(
+      normalized
+    ) ||
+    /^(?:how are you|how r u|how's it going|hows it going|what's up|whats up|wassup|sup|kaise ho|kaise hain|kya haal|kya haal hai|kya chal raha hai|kya kar rahe ho|aap kaise ho|tum kaise ho|sab badhiya)(?:\s+(?:bhai|bro|dost|yaar|airai))?$/i.test(
+      normalized
+    )
+  ) {
+    return {
+      matched: true,
+      kind: 'chitchat',
+      topicLabel: 'greeting',
+      reply: pick({
+        en: "Hey! I'm doing great — ready whenever you are. What would you like to talk about, code, or look up today?",
+        hi: 'नमस्ते! मैं बिल्कुल ठीक हूँ और मदद के लिए तैयार हूँ। बताइए, आज किस विषय, कोड या सवाल पर बात करें?',
+        hinglish: 'Namaste! Main bilkul badhiya hoon. Bataiye aaj kis topic, code ya sawal par baat karni hai?',
+        es: '¡Hola! Todo muy bien por aquí. ¿Sobre qué quieres conversar, programar o consultar hoy?',
+        fr: 'Bonjour ! Je suis prêt à vous aider. De quoi souhaitez-vous discuter ou apprendre aujourd’hui ?',
+        ar: 'أهلاً بك! أنا بخير ومستعد لمساعدتك. عمّ تحب أن نتحدث اليوم؟',
+      }),
+    };
+  }
+
+  // 2. User sharing their own status ("I am fine", "main theek hu", "sab badhiya hai")
+  if (
+    /^(?:i am fine|im fine|i am good|im good|all good|doing well|doing good|main theek hu|main thik hu|main theek hoon|thik hu|theek hu|badhiya hu|mast hu|sab theek hai|sab badhiya hai)$/i.test(
+      normalized
+    )
+  ) {
+    return {
+      matched: true,
+      kind: 'chitchat',
+      topicLabel: 'wellbeing',
+      reply: pick({
+        en: 'Glad to hear that! Let me know anytime if you want help with something, coding, math, or a quick question.',
+        hi: 'यह सुनकर अच्छा लगा! जब भी किसी विषय, गणित, कोडिंग या सवाल में मदद चाहिए हो, बस बताइए।',
+        hinglish: 'Sun kar accha laga! Jab bhi kisi sawal, math ya coding mein help chahiye ho, bas bataiye.',
+        es: '¡Me alegra mucho! Dime en qué te puedo ayudar hoy.',
+        fr: 'Ravi de l’apprendre ! Dites-moi comment je peux vous aider aujourd’hui.',
+        ar: 'يسعدني سماع ذلك! أخبرني كيف يمكنني مساعدتك اليوم.',
+      }),
+    };
+  }
+
+  // 3. Short acknowledgments & confirmations ("ok", "accha", "theek hai", "haan", "hmm", "samajh gaya", "thk h", "smjh gya")
+  if (
+    /^(?:ok|okay|okie|k|kk|alright|got it|understood|clear|done|noted|haan|ha|hn|ji|hanji|yes|yep|yeah|yup|theek|theek hai|theek h|thik|thik hai|thik h|thk|thk h|sahi|sahi hai|sahi h|accha|achha|acha|accha ji|hmm|hm|mm|uh huh|samajh gaya|samajh gayi|smjh gya|smjh gyi)$/i.test(
+      normalized
+    )
+  ) {
+    return {
+      matched: true,
+      kind: 'chitchat',
+      topicLabel: 'acknowledgment',
+      reply: pick({
+        en: 'Got it! Feel free to ask your next question whenever you’re ready.',
+        hi: 'ठीक है! जब भी आपका अगला सवाल या काम हो, बेझिझक पूछें।',
+        hinglish: 'Theek hai! Jab bhi next sawal ho ya kuch aur discuss karna ho, bataiye.',
+        es: '¡Entendido! Cuando quieras seguir, dime tu siguiente pregunta.',
+        fr: 'C’est noté ! N’hésitez pas si vous avez une autre question.',
+        ar: 'حسناً! أخبرني متى ما كان لديك سؤال آخر.',
+      }),
+    };
+  }
+
+  // 4. Polite declines / nevermind ("no", "nahi", "nhi yr", "kuch nahi", "chhodo", "rehne do")
+  if (
+    /^(?:no|nope|nah|nahi|nhi|nhi yr|nhi yaar|nahi bhai|na|no thanks|nahi thanks|kuch nahi|kuch nhi|nothing|never mind|nevermind|chhodo|rehne do|skip)$/i.test(
+      normalized
+    )
+  ) {
+    return {
+      matched: true,
+      kind: 'chitchat',
+      topicLabel: 'decline',
+      reply: pick({
+        en: 'No problem at all! I’m right here whenever you want to chat or explore something else.',
+        hi: 'कोई बात नहीं! जब भी किसी और विषय पर बात करनी हो, मैं यहीं हूँ।',
+        hinglish: 'Koi baat nahi! Jab bhi kisi aur topic par baat karni ho, bas message kar dein.',
+        es: '¡Sin problema! Aquí estoy cuando necesites algo más.',
+        fr: 'Pas de souci ! Je reste disponible si besoin.',
+        ar: 'لا مشكلة على الإطلاق! أنا هنا متى احتجت إليّ.',
+      }),
+    };
+  }
+
+  // 5. Compliments & positive reactions ("nice", "cool", "badhiya", "mast", "wow", "good job", "smart")
+  if (
+    /^(?:nice|cool|great|awesome|amazing|wow|wah|badhiya|badiya|mast|super|fantastic|good|very good|good job|well done|love it|zabardast|shabaash|smart|helpful|sahi h)$/i.test(
+      normalized
+    )
+  ) {
+    return {
+      matched: true,
+      kind: 'chitchat',
+      topicLabel: 'compliment',
+      reply: pick({
+        en: 'Thank you! Glad that helped — let me know what you want to do next.',
+        hi: 'धन्यवाद! जानकर खुशी हुई कि यह मददगार रहा। बताइए, आगे क्या देखें?',
+        hinglish: 'Shukriya! Khushi hui ki pasand aaya — bataiye aage kya explore karein?',
+        es: '¡Muchas gracias! Me alegra que te haya servido.',
+        fr: 'Merci beaucoup ! Ravi que cela vous aide.',
+        ar: 'شكراً لك! يسعدني أن ذلك كان مفيداً.',
+      }),
+    };
+  }
+
+  // 6. Apologies & polite pauses ("sorry", "maaf karo", "please", "wait", "ruko")
+  if (/^(?:sorry|my bad|maaf|maaf karo|maaf kijiye|excuse me|please|pls|plz|wait|ruko|ek minute|one sec)$/i.test(normalized)) {
+    return {
+      matched: true,
+      kind: 'chitchat',
+      topicLabel: 'polite',
+      reply: pick({
+        en: 'No worries at all! Take your time and tell me how I can help.',
+        hi: 'अरे कोई बात नहीं! आराम से बताइए, मैं आपकी क्या मदद कर सकता हूँ?',
+        hinglish: 'Are koi baat nahi! Aaram se bataiye, main kya help kar sakta hoon?',
+        es: '¡No te preocupes! Tómate tu tiempo y dime cómo puedo ayudarte.',
+        fr: 'Aucun problème ! Prenez votre temps et dites-moi ce dont vous avez besoin.',
+        ar: 'لا بأس أبداً! خذ وقتك وأخبرني كيف أساعدك.',
+      }),
+    };
+  }
+
+  // 7. Mood / Friendly chat / Boredom ("bore ho raha hu", "tired", "baat karo", "bhai", "yaar")
+  if (
+    /\b(?:bore ho raha|bore ho rahi|i am bored|im bored|feeling bored|feeling tired|thak gaya|thak gayi|udaas|baat karo|talk to me|kuch baat karein)\b/i.test(
+      normalized
+    ) ||
+    /^(?:bhai|bhaiya|bro|yaar|yr|dost|friend|buddy|boss|sir|madam|bored|sad|happy|tired|khush hu)$/i.test(normalized)
+  ) {
+    return {
+      matched: true,
+      kind: 'chitchat',
+      topicLabel: 'social',
+      reply: pick({
+        en: "I'm right here! We can have a fun chat, crack a joke, solve a puzzle, or build something cool in code — what sounds good to you?",
+        hi: 'मैं यहीं हूँ! हम मज़ेदार बात कर सकते हैं, कोई चुटकुला सुन सकते हैं, पहेली हल कर सकते हैं या किसी रोचक विषय पर बात कर सकते हैं — बताइए क्या करें?',
+        hinglish: 'Main yahi hoon dost! Chahe to ek mast joke sunau, koi interesting fact batau, ya coding/math try karein — aapka mood kaisa hai?',
+        es: '¡Aquí estoy! Podemos charlar, contar un chiste o explorar un tema interesante.',
+        fr: 'Je suis là ! On peut discuter, résoudre une énigme ou explorer un sujet intéressant.',
+        ar: 'أنا هنا معك! يمكننا الدردشة أو سماع نكتة أو استكشاف موضوع شيّق.',
+      }),
+    };
+  }
+
+  // 8. Vague / incomplete human prompts ("ab btao", "ab batao", "btao", "bolo", "suno") — understand before researching!
+  if (
+    /^(?:(?:ab|chalo|haan|acha|accha|toh|to|phir|fir)\s+)?(?:batao|btao|bataiye|btaiye|bolo|suno|sun|dekho|listen|tell me|help|kuch batao|kuch btao|ek baat|ek sawal|sach mein|really|seriously|kyun|why|kaise|how|kya|what|now what|ab kya)$/i.test(
+      normalized
+    )
+  ) {
+    return {
+      matched: true,
+      kind: 'chitchat',
+      topicLabel: 'clarify',
+      reply: pick({
+        en: "I'm listening! Tell me a bit more — is there a specific question, topic, math problem, or code snippet you want help with?",
+        hi: 'जी, मैं ध्यान से सुन रहा हूँ! कृपया थोड़ा स्पष्ट बताएँ — आप किस विषय, सवाल, गणित या कोड के बारे में जानना चाहते हैं?',
+        hinglish: 'Haan ji, main dhyan se sun raha hoon! Batayein kis topic, sawal, math ya code mein help chahiye?',
+        es: '¡Te escucho! Cuéntame un poco más sobre qué tema o duda quieres ayuda.',
+        fr: 'Je vous écoute ! Précisez-moi le sujet ou la question sur laquelle vous voulez de l’aide.',
+        ar: 'أنا أستمع إليك! أخبرني بمزيد من التفاصيل حول ما تريد المساعدة فيه.',
+      }),
+    };
+  }
+
+  // 9. Laughter / reaction messages
+  if (/^(?:haha|hehe|lol|lmao|rofl|hihi)+$/i.test(normalized) || /^[\p{Emoji}\s]+$/u.test(trimmed)) {
+    return {
+      matched: true,
+      kind: 'chitchat',
+      topicLabel: 'reaction',
+      reply: pick({
+        en: '😄 Glad to share a smile! What should we explore next?',
+        hi: '😄 अच्छा लगा! बताइए, अब किस विषय पर बात करें?',
+        hinglish: '😄 Badhiya! Bataiye ab kis cheez par baat karni hai?',
+        es: '😄 ¡Qué bien! ¿Qué hacemos ahora?',
+        fr: '😄 Avec le sourire ! Que souhaitez-vous faire ensuite ?',
+        ar: '😄 يسعدني ذلك! عمّ نتحاور الآن؟',
+      }),
+    };
+  }
+
+  return null;
+}
+
+/**
+ * Build a thoughtful clarification reply when a prompt isn't a factual/code/research query
+ * so AirAI doesn't blindly search Wikipedia for conversational text.
+ * @param {string} trimmed
+ * @param {string} selectedLang
+ * @returns {string}
+ */
+export function buildIntentClarificationReply(trimmed, selectedLang) {
+  const lang = resolveReplyLanguage(trimmed, selectedLang);
+  if (lang === 'hi') {
+    return `मैंने आपकी बात **"${trimmed}"** ध्यान से पढ़ी। यह सामान्य बातचीत जैसा लग रहा है, इसलिए मैंने बिना ज़रूरत वेब सर्च नहीं किया।\n\nअगर आप किसी **विषय की जानकारी**, **गणित**, या **कोड** चाहते हैं तो साफ़ लिखें (जैसे *"रिसर्च करो ..."* या *"डिफ़ाइन ..."*), वरना हम ऐसे ही बात कर सकते हैं!`;
+  }
+  if (lang === 'hinglish') {
+    return `Maine aapki baat **"${trimmed}"** dhyan se samjhi — yeh normal human conversation lag rahi hai, isliye maine bina zaroorat browser research nahi ki.\n\nAgar aap kisi topic ki details chahte hain to bas clear pooch lein (jaise *"kya hai ..."*, *"define ..."* ya *"research ..."*), warna batayein main aapki kya help karoon?`;
+  }
+  return `I read **"${trimmed}"** carefully — it looks conversational rather than a topic needing web research, so I skipped searching the web.\n\nIf you'd like factual details, code, or a definition, just ask clearly (for example \`define ...\`, \`what is ...\`, or \`research ...\`), or tell me what's on your mind!`;
 }
 
 /**
@@ -641,24 +905,24 @@ const KNOWLEDGE_BASE = [
     isChitchat: true,
     keywords: ['hello', 'hi', 'hey', 'namaste', 'salam', 'hola', 'bonjour', 'kaise ho', 'kaise hain', 'kya haal', 'how are you', 'good morning', 'good evening', 'good afternoon', 'नमस्ते', 'प्रणाम', 'कैसे हो', 'कैसे हैं', 'क्या हाल', 'हेलो'],
     replies: {
-      en: "Hello! I'm **MyAI (MML High Thinking)** — ready to analyze, reason step-by-step, solve math, research live web/code, and remember our conversation.",
-      hi: 'नमस्ते! मैं **MyAI (MML हाई थिंकिंग मॉडल)** हूँ। आप मुझसे गहन सवाल, स्टेप-बाय-स्टेप गणित, तुलना, कोड या ब्राउज़र रिसर्च करा सकते हैं। बताइए आज क्या मदद करूँ?',
-      hinglish: 'Namaste! Main **MyAI (MML High Thinking Model)** hoon. Aap mujhse deep questions, step-by-step math, comparisons, code ya live browser research kara sakte hain. Bataiye kya help chahiye?',
-      es: '¡Hola! Soy **MyAI (MML High Thinking)**. Puedo razonar paso a paso, comparar temas, resolver matemáticas e investigar en la web.',
-      fr: 'Bonjour ! Je suis **MyAI (MML High Thinking)**, prêt à raisonner étape par étape, comparer des sujets et rechercher en ligne.',
-      ar: 'مرحباً! أنا **MyAI (نموذج التفكير العالي MML)**، جاهز للتحليل المتعمق وحل المسائل والبحث في المتصفح.',
+      en: "Hello! I'm **AirAI (Qwen3-Style Hybrid MML)** — switch anytime between **Thinking** and **Fast** mode (or type `/think` and `/no_think`), ask for structured comparison tables, verified step-by-step math, code, or live browser research.",
+      hi: 'नमस्ते! मैं **AirAI (Qwen3 हाइब्रिड MML मॉडल)** हूँ। आप **Think** और **Fast** मोड बदल सकते हैं (`/think` या `/no_think` लिखें), तुलना तालिकाएँ, सत्यापित गणित, कोड या लाइव ब्राउज़र रिसर्च करा सकते हैं।',
+      hinglish: 'Namaste! Main **AirAI (Qwen3 Hybrid MML Model)** hoon. Aap **Think** aur **Fast** mode switch kar sakte hain (ya prompt mein `/think` / `/no_think` likhein) — step-by-step math verification, comparison tables, code aur browser research sab milega!',
+      es: '¡Hola! Soy **AirAI (Modelo Híbrido Qwen3-MML)**. Usa `/think` o `/no_think` para alternar entre razonamiento paso a paso y respuestas instantáneas.',
+      fr: 'Bonjour ! Je suis **AirAI (Modèle Hybride Qwen3-MML)**. Utilisez `/think` ou `/no_think` pour basculer entre réflexion détaillée et réponse instantanée.',
+      ar: 'مرحباً! أنا **AirAI (نموذج Qwen3 الهجين MML)** — يمكنك التبديل بين التفكير العميق والرد السريع عبر `/think` و `/no_think`.',
     },
   },
   {
     isChitchat: true,
     keywords: ['what can you do', 'your features', 'help me', 'kya kar sakte ho', 'tum kya karte ho', 'aap kya kar sakte', 'क्या कर सकते हो', 'मदद', 'सहायता'],
     replies: {
-      en: '### What MyAI MML Can Do\n- **Multi-Step Thinking & Comparisons**: Compare two subjects (`Python vs JavaScript`), transform answers into simple points or quizzes.\n- **Step-by-Step Math & Algebra**: Linear/quadratic equations (`2x + 5 = 15`), interest, BMI, factorials, primes, and statistics.\n- **Browser & Code Research**: Pull verified Wikipedia explanations and Stack Overflow code snippets, then auto-learn them offline.\n- **Voice Input & Hindi/Multilingual TTS**: Speak and listen hands-free with `localStorage` persistence.',
-      hi: '### MyAI MML की मुख्य क्षमताएँ\n- **गहन चिंतन व तुलना**: दो विषयों की तुलना (`Python vs JavaScript`), सरल व्याख्या और अभ्यास प्रश्न।\n- **चरणबद्ध गणित व बीजगणित**: समीकरण (`2x + 5 = 15`), ब्याज, प्रतिशत, प्राइम जांच और सांख्यिकी।\n- **ब्राउज़र व कोड रिसर्च**: लाइव वेब और कोड उदाहरण खोजकर ऑफ़लाइन मेमोरी में सहेजना।\n- **वॉइस और बहुभाषी स्पीच**: बोलकर पूछें और सुनें।',
-      hinglish: '### MyAI MML Kya-Kya Kar Sakta Hai?\n- **Deep Thinking & Comparison**: Do topics compare karna (`Python vs JavaScript`), pros/cons aur quiz banana.\n- **Step-by-Step Math & Algebra**: Equations (`2x + 5 = 15`), factorial, prime check, interest aur stats solve karna.\n- **Browser & Code Research**: Live Wikipedia aur Stack Overflow code research karke offline ke liye learn karna.\n- **Voice & Hindi TTS**: Mic se bolkar poochhna aur Hindi/English mein sunna.',
-      es: 'Puedo comparar temas, resolver ecuaciones paso a paso, investigar código y resúmenes en el navegador, y guardar conocimiento localmente.',
-      fr: 'Je peux comparer des sujets, résoudre des équations étape par étape, rechercher du code en ligne et mémoriser vos notes localement.',
-      ar: 'يمكنني مقارنة المواضيع، وحل المعادلات خطوة بخطوة، والبحث عن الأكواد في المتصفح، وحفظ المعرفة محلياً.',
+      en: '### What AirAI (Qwen3-MML) Can Do\n- **Hybrid Thinking (`/think` & `/no_think`)**: Live thought-process streaming with deep reasoning, or instant Fast replies.\n- **Multi-Task & Comparison Tables**: Decomposes compound queries (`Explain gravity and also solve 2x + 4 = 12`) and builds Markdown tables for `A vs B`.\n- **Self-Verified Math & Code**: Algebra, geometry, stats with verification checks (`✓`), plus clean HTML/CSS/JS code templates & browser code search.\n- **Browser Research & Auto-Learn**: Pulls cited Wikipedia & Dictionary knowledge and saves it locally.',
+      hi: '### AirAI (Qwen3-MML) की मुख्य क्षमताएँ\n- **हाइब्रिड थिंकिंग (`/think` व `/no_think`)**: लाइव विचार प्रक्रिया या तुरंत तेज़ उत्तर।\n- **तुलना तालिकाएँ व संयुक्त प्रश्न**: दो विषयों की Markdown तालिका और एक साथ दो काम हल करना।\n- **सत्यापित गणित व कोड**: समीकरण सत्यापन (`✓`), ज्यामिति, HTML/JS कोड और ब्राउज़र रिसर्च।',
+      hinglish: '### AirAI (Qwen3-MML) Kya-Kya Kar Sakta Hai?\n- **Hybrid Thinking (`/think` & `/no_think`)**: Live thought streaming ya instant Fast reply.\n- **Comparison Tables & Multi-Task**: `Python vs JavaScript` ke liye clean table aur compound sawal ek saath solve karna.\n- **Verified Math & Coding**: Algebra verification (`✓`), geometry, HTML/CSS/JS coder patterns aur browser code search.\n- **Browser Research & Voice**: Live Wikipedia citations, offline auto-learn aur multilingual speech.',
+      es: 'Ofrezco pensamiento híbrido (`/think` y `/no_think`), tablas comparativas, matemáticas verificadas, código y búsqueda web local.',
+      fr: 'Je propose la réflexion hybride (`/think` et `/no_think`), des tableaux comparatifs, des maths vérifiées et la recherche navigateur.',
+      ar: 'أوفر التفكير الهجين (`/think` و `/no_think`)، جداول المقارنة، التحقق الرياضي، الأكواد، والبحث عبر المتصفح.',
     },
   },
   {
@@ -675,25 +939,25 @@ const KNOWLEDGE_BASE = [
   },
   {
     isChitchat: true,
-    keywords: ['who are you', 'what is myai', 'your name', 'kaun ho', 'tum kaun', 'tumhara naam', 'quien eres', 'qui es-tu', 'من انت', 'कौन हो', 'तुम्हारा नाम', 'आप कौन'],
+    keywords: ['who are you', 'what is airai', 'what is myai', 'qwen3', 'qwen', 'airai', 'your name', 'kaun ho', 'tum kaun', 'tumhara naam', 'quien eres', 'qui es-tu', 'من انت', 'कौन हो', 'तुम्हारा नाम', 'आप कौन'],
     replies: {
-      en: "I'm **MyAI** running the **High-Thinking MML engine** — a serverless, offline-capable assistant built with pure HTML, CSS & JS. All your chats, learned topics, and custom memory stay privately in `localStorage`.",
-      hi: 'मैं **MyAI (High-Thinking MML मॉडल)** हूँ — एक ऑफ़लाइन और सर्वर-रहित सहायक जो सीधे आपके ब्राउज़र में चलता है। आपकी चैट और सीखी गई जानकारी `localStorage` में सुरक्षित रहती है।',
-      hinglish: 'Main **MyAI** hoon (**High-Thinking MML Model** ke saath) — ek serverless, high-trained offline + browser research chatbot jo pure HTML, CSS aur JS par chalta hai.',
-      es: 'Soy **MyAI**, un asistente sin servidor con razonamiento multipaso (MML) que funciona en tu navegador y guarda todo en `localStorage`.',
-      fr: 'Je suis **MyAI**, un assistant sans serveur doté du moteur de réflexion MML qui fonctionne localement dans votre navigateur.',
-      ar: 'أنا **MyAI** بمحرك التفكير العالي (MML) — مساعد ذكي بدون خادم يعمل في متصفحك ويحفظ بياناتك محلياً.',
+      en: "I'm **AirAI** powered by a **Qwen3-style Hybrid Thinking MML engine** — running 100% locally in pure HTML, CSS & JS with `/think` and `/no_think` modes, live thought streaming, verified math, Markdown tables, and browser research.",
+      hi: 'मैं **AirAI** हूँ, जो **Qwen3-स्टाइल हाइब्रिड थिंकिंग MML इंजन** पर चलता है — बिना किसी सर्वर के सीधे ब्राउज़र में `/think` व `/no_think` मोड, लाइव विचार प्रक्रिया और ब्राउज़र रिसर्च के साथ।',
+      hinglish: 'Main **AirAI** hoon — **Qwen3-style Hybrid Thinking MML Model** ke saath! Isme `/think` aur `/no_think` modes, live thinking stream, verified math, comparison tables aur browser code research sab client-side chalta hai.',
+      es: 'Soy **AirAI** con un motor híbrido **estilo Qwen3 (MML)** que funciona 100% en tu navegador con modos `/think` y `/no_think`.',
+      fr: 'Je suis **AirAI**, propulsé par un moteur hybride **de type Qwen3 (MML)** 100 % local avec modes `/think` et `/no_think`.',
+      ar: 'أنا **AirAI** بمحرك هجين **بنمط Qwen3 (MML)** يعمل محلياً في المتصفح مع أوضاع `/think` و `/no_think`.',
     },
   },
   {
     keywords: ['offline', 'local storage', 'localstorage', 'server', 'internet', 'bina server', 'sin conexion', 'hors ligne', 'ऑफ़लाइन', 'लोकल स्टोरेज', 'बिना सर्वर'],
     replies: {
-      en: '### How MyAI Works Offline\n- **Zero Server**: All question matching, math evaluation, and text tools run locally in JavaScript.\n- **Local Storage**: Conversations, theme, language, and custom memories are saved in `localStorage`.\n- **Browser Speech**: Voice input and text-to-speech use the built-in Web Speech APIs.',
-      hi: '### MyAI बिना सर्वर के कैसे काम करता है?\n- **कोई सर्वर नहीं**: सवालों के जवाब, गणित और टेक्स्ट टूल्स सीधे JavaScript में चलते हैं।\n- **लोकल स्टोरेज**: आपकी चैट, भाषा और मेमोरी `localStorage` में सहेजी जाती है।\n- **वॉइस फीचर**: बोलकर पूछने और सुनने के लिए ब्राउज़र के Web Speech API का उपयोग होता है।',
-      hinglish: '### MyAI Bina Server aur Offline Kaise Chalta Hai?\n- **No Server Needed**: Saara Q&A engine aur math solver browser ke JavaScript mein chalta hai.\n- **LocalStorage**: Aapki chats, language aur custom memory device ke `localStorage` mein store hoti hain.\n- **Voice Support**: Mic aur Text-to-Speech browser ke built-in Web Speech API se kaam karte hain.',
-      es: 'MyAI procesa todo localmente con JavaScript y guarda tu historial en `localStorage`, por lo que no depende de ningún servidor externo.',
-      fr: 'MyAI exécute toute la logique localement en JavaScript et stocke vos conversations dans `localStorage`, sans serveur.',
-      ar: 'يعمل MyAI بالكامل عبر JavaScript داخل المتصفح ويحفظ بياناتك في `localStorage` دون الحاجة إلى خادم.',
+      en: '### How AirAI Works Offline\n- **Zero Server**: All question matching, math evaluation, and text tools run locally in JavaScript.\n- **Local Storage**: Conversations, theme, language, and custom memories are saved in `localStorage`.\n- **Browser Speech**: Voice input and text-to-speech use the built-in Web Speech APIs.',
+      hi: '### AirAI बिना सर्वर के कैसे काम करता है?\n- **कोई सर्वर नहीं**: सवालों के जवाब, गणित और टेक्स्ट टूल्स सीधे JavaScript में चलते हैं।\n- **लोकल स्टोरेज**: आपकी चैट, भाषा और मेमोरी `localStorage` में सहेजी जाती है।\n- **वॉइस फीचर**: बोलकर पूछने और सुनने के लिए ब्राउज़र के Web Speech API का उपयोग होता है।',
+      hinglish: '### AirAI Bina Server aur Offline Kaise Chalta Hai?\n- **No Server Needed**: Saara Q&A engine aur math solver browser ke JavaScript mein chalta hai.\n- **LocalStorage**: Aapki chats, language aur custom memory device ke `localStorage` mein store hoti hain.\n- **Voice Support**: Mic aur Text-to-Speech browser ke built-in Web Speech API se kaam karte hain.',
+      es: 'AirAI procesa todo localmente con JavaScript y guarda tu historial en `localStorage`, por lo que no depende de ningún servidor externo.',
+      fr: 'AirAI exécute toute la logique localement en JavaScript et stocke vos conversations dans `localStorage`, sans serveur.',
+      ar: 'يعمل AirAI بالكامل عبر JavaScript داخل المتصفح ويحفظ بياناتك في `localStorage` دون الحاجة إلى خادم.',
     },
   },
   {
@@ -908,7 +1172,7 @@ export function generateOfflineReply(userText, selectedLang, customMemory, saveM
     };
   }
 
-  // 1. Teach MyAI directly from chat ("remember that my name is X" / "yaad rakho mera naam X hai")
+  // 1. Teach AirAI directly from chat ("remember that my name is X" / "yaad rakho mera naam X hai")
   const rememberMatch = trimmed.match(
     /^(?:remember that|remember|yaad rakho ki|yaad rakho|याद रखो कि|याद रखो|recuerda que|retiens que|تذكر أن)\s+(.+)$/i
   );
@@ -983,7 +1247,12 @@ export function generateOfflineReply(userText, selectedLang, customMemory, saveM
     return { matched: true, kind: 'utility', reply: `Reversed text:\n\n\`${reversed}\`` };
   }
 
+  // 5b. Understand human communication words & casual chat BEFORE knowledge/web research
+  const humanChatMatch = matchHumanCommunication(trimmed, lang);
+  if (humanChatMatch) return humanChatMatch;
+
   // 6. Multilingual Knowledge Base weighted keyword matching
+  const normalizedLower = normalizeChatText(trimmed);
   let topTopic = null;
   let topHits = 0;
 
@@ -995,8 +1264,8 @@ export function generateOfflineReply(userText, selectedLang, customMemory, saveM
       if (!cleanKw) continue;
       if (cleanKw.length <= 3) {
         const rx = new RegExp(`(?:^|[^\\p{L}\\p{N}])${cleanKw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?:$|[^\\p{L}\\p{N}])`, 'iu');
-        if (rx.test(lower)) hits += 2;
-      } else if (lower.includes(cleanKw)) {
+        if (rx.test(lower) || rx.test(normalizedLower)) hits += 2;
+      } else if (lower.includes(cleanKw) || normalizedLower.includes(cleanKw)) {
         hits += cleanKw.includes(' ') ? 4 : 2;
       }
     }

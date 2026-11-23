@@ -1,6 +1,6 @@
-# MyAI — Offline Multilingual Chatbot
+# AirAI — Offline Multilingual Chatbot
 
-MyAI is a serverless, offline-capable multilingual AI chatbot built with **pure HTML, CSS, and JavaScript** (`index.html`, `src/styles.css`, `src/app.js`, `src/knowledge.js`, `src/research.js`).
+AirAI is a serverless, offline-capable multilingual AI chatbot built with **pure HTML, CSS, and JavaScript** (`index.html`, `src/styles.css`, `src/app.js`, `src/knowledge.js`, `src/research.js`, `src/thinking.js`).
 
 ## Features
 
@@ -35,9 +35,9 @@ Or serve the root directory directly with any static file server since `index.ht
 
 ## Google AdSense Compliance Setup
 
-MyAI includes standalone static pages (`about.html`, `privacy-policy.html`, `terms.html`, `contact.html`), an interactive cookie/privacy consent notice, `public/robots.txt`, and `public/ads.txt`. Before submitting your domain for AdSense review:
+AirAI includes standalone static pages (`about.html`, `privacy-policy.html`, `terms.html`, `contact.html`), an interactive cookie/privacy consent notice, `public/robots.txt`, and `public/ads.txt`. Before submitting your domain for AdSense review:
 
 1. Replace `pub-0000000000000000` inside `public/ads.txt` with your real Google AdSense Publisher ID and uncomment the line.
-2. Update the support email placeholder (`contact@myai-assistant.example`) in `contact.html` and `src/legal.js` with your real publisher email address.
+2. Update the support email placeholder (`contact@airai-assistant.example`) in `contact.html` and `src/legal.js` with your real publisher email address.
 3. Add your AdSense verification `<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-..." crossorigin="anonymous"></script>` snippet in `<head>` once your custom domain or GitHub Pages URL is ready.
 

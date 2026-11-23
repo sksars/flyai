@@ -46,11 +46,11 @@
 
       if (!name || !email || !message) return;
 
-      const subject = encodeURIComponent(`[MyAI] ${topic} from ${name}`);
+      const subject = encodeURIComponent(`[AirAI] ${topic} from ${name}`);
       const body = encodeURIComponent(`Name: ${name}\nReply Email: ${email}\nTopic: ${topic}\n\n${message}`);
       const mailtoLink = /** @type {HTMLAnchorElement | null} */ (document.getElementById('contact-mailto-link'));
       if (mailtoLink) {
-        mailtoLink.href = `mailto:contact@myai-assistant.example?subject=${subject}&body=${body}`;
+        mailtoLink.href = `mailto:contact@airai-assistant.example?subject=${subject}&body=${body}`;
         mailtoLink.classList.remove('hidden');
       }
 

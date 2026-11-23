@@ -1,15 +1,25 @@
-import { SPEECH_LOCALES, STARTER_PROMPTS, UI_TEXT, generateOfflineReply } from './knowledge.js';
+import {
+  SPEECH_LOCALES,
+  STARTER_PROMPTS,
+  UI_TEXT,
+  buildIntentClarificationReply,
+  generateOfflineReply,
+} from './knowledge.js';
 import {
   buildLearnedEntry,
   formatResearchMarkdown,
   isExplicitResearchRequest,
   isFollowUpReference,
+  needsBrowserResearch,
   performBrowserResearch,
   researchFollowUpOnTopic,
 } from './research.js';
 import {
+  decomposeCompoundQuery,
   enhanceResearchWithThinking,
+  generateStructuredCodeReply,
   parseComparisonQuery,
+  parseThinkingDirective,
   runComparisonReasoning,
   solveAdvancedMathStepByStep,
   transformPreviousReply,
@@ -45,6 +55,7 @@ const state = {
 };
 
 let streamTimerId = null;
+let pendingSleepResolve = null;
 let isGenerating = false;
 let activeSpeechMsgId = null;
 let recognition = null;
@@ -72,6 +83,7 @@ const els = {
   openSettingsBtn: $('open-settings-btn'),
   labelSettingsBtn: $('label-settings-btn'),
   activeChatTitle: $('active-chat-title'),
+  modelModeSelect: $('model-mode-select'),
   languageSelect: $('language-select'),
   autoTtsBtn: $('auto-tts-btn'),
   themeToggleBtn: $('theme-toggle-btn'),
@@ -308,6 +320,12 @@ function applyLocalization() {
 
   els.languageSelect.value = state.settings.language;
   els.settingLanguage.value = state.settings.language;
+  if (els.modelModeSelect) {
+    const modeSel = /** @type {HTMLSelectElement} */ (els.modelModeSelect);
+    modeSel.value = state.settings.highThinking ? 'think' : 'fast';
+    if (modeSel.options[0] && copy.modelThinkLabel) modeSel.options[0].textContent = copy.modelThinkLabel;
+    if (modeSel.options[1] && copy.modelFastLabel) modeSel.options[1].textContent = copy.modelFastLabel;
+  }
   if (els.settingHighThinking) {
     /** @type {HTMLInputElement} */ (els.settingHighThinking).checked = Boolean(state.settings.highThinking);
   }
@@ -387,7 +405,22 @@ function renderMarkdown(rawText) {
     }
   };
 
-  for (const line of lines) {
+  const parseTableCells = (rowStr) => {
+    let s = rowStr.trim();
+    if (s.startsWith('|')) s = s.slice(1);
+    if (s.endsWith('|')) s = s.slice(0, -1);
+    return s.split('|').map((c) => c.trim());
+  };
+
+  const isTableSeparator = (rowStr) => {
+    const trimmedRow = rowStr.trim();
+    if (!trimmedRow.includes('|') || !trimmedRow.includes('-')) return false;
+    const cells = parseTableCells(trimmedRow);
+    return cells.length > 0 && cells.every((c) => /^:?-{2,}:?$/.test(c));
+  };
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
     const trimmed = line.trim();
     const blockMatch = trimmed.match(/^@@CODE_BLOCK_(\d+)@@$/);
     if (blockMatch) {
@@ -398,6 +431,28 @@ function renderMarkdown(rawText) {
       )}</span><button type="button" class="code-copy-btn" data-code="${encodeURIComponent(
         blk.code
       )}">${escapeHtml(t().copy)}</button></div><pre><code>${escapeHtml(blk.code)}</code></pre></div>`;
+      continue;
+    }
+
+    // Markdown Table block: header line + separator line + body rows
+    if (trimmed.includes('|') && i + 1 < lines.length && isTableSeparator(lines[i + 1])) {
+      closeLists();
+      const headers = parseTableCells(trimmed);
+      i += 2; // Skip separator line
+      const bodyRows = [];
+      while (i < lines.length && lines[i].trim().includes('|') && !lines[i].trim().startsWith('@@CODE_BLOCK_')) {
+        bodyRows.push(parseTableCells(lines[i]));
+        i++;
+      }
+      i--; // Adjust loop index for outer increment
+      const thead = `<thead><tr>${headers.map((h) => `<th>${formatInline(h)}</th>`).join('')}</tr></thead>`;
+      const tbody = `<tbody>${bodyRows
+        .map(
+          (r) =>
+            `<tr>${headers.map((_, colIdx) => `<td>${formatInline(r[colIdx] || '')}</td>`).join('')}</tr>`
+        )
+        .join('')}</tbody>`;
+      html += `<div class="md-table-wrap"><table class="md-table">${thead}${tbody}</table></div>`;
       continue;
     }
 
@@ -604,11 +659,11 @@ function createMessageElement(msg) {
     <span class="assistant-avatar" aria-hidden="true">
       <svg viewBox="0 0 32 32" fill="none">
         <rect x="2" y="2" width="28" height="28" rx="8" stroke="currentColor" stroke-width="2.2" />
-        <path d="M10 21V11L16 17L22 11V21" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M10.5 21.5L16 9.5L21.5 21.5M12.5 17.5H19.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </span>
     <span class="assistant-meta">
-      <span class="assistant-name">MyAI</span>
+      <span class="assistant-name">AirAI</span>
       <span aria-hidden="true">·</span>
       <span class="message-time">${formatTime(msg.timestamp)}</span>
     </span>
@@ -652,15 +707,34 @@ function createMessageElement(msg) {
   return row;
 }
 
-function createThinkingElement(trace, durationMs) {
+function appendThinkingStepItem(listEl, stepText) {
+  const li = document.createElement('li');
+  const tagMatch = stepText.match(/^(\[[A-Za-z]+\])\s+(.+)$/);
+  if (tagMatch) {
+    const tag = document.createElement('span');
+    tag.className = 'thinking-phase-tag';
+    tag.textContent = tagMatch[1];
+    li.append(tag, document.createTextNode(tagMatch[2]));
+  } else {
+    li.textContent = stepText;
+  }
+  listEl.appendChild(li);
+}
+
+function createThinkingElement(trace, durationMs, options = { streaming: false }) {
   const details = document.createElement('details');
-  details.className = 'thinking-block';
+  details.className = `thinking-block${options.streaming ? ' is-streaming' : ''}`;
+  if (options.streaming) {
+    details.open = true;
+  }
 
   const copy = t();
-  const label = copy.thinkingSummaryLabel || 'MML Reasoning';
+  const label = options.streaming
+    ? copy.thinkingLiveLabel || 'Thinking...'
+    : copy.thinkingSummaryLabel || 'Thought process';
   const stepsWord = copy.thinkingStepsWord || 'steps';
   const durationLabel =
-    typeof durationMs === 'number' && durationMs > 0
+    !options.streaming && typeof durationMs === 'number' && durationMs > 0
       ? ` · ${(Math.max(durationMs, 10) / 1000).toFixed(2)}s`
       : '';
 
@@ -670,8 +744,8 @@ function createThinkingElement(trace, durationMs) {
     <svg class="thinking-summary-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
       <path d="M9.5 4a3.5 3.5 0 0 0-3.5 3.5c0 .4.07.79.2 1.15A3.5 3.5 0 0 0 5 11.5c0 1.25.66 2.35 1.65 2.96A3.5 3.5 0 0 0 10 19.5h1.5V4h-2zM14.5 4a3.5 3.5 0 0 1 3.5 3.5c0 .4-.07.79-.2 1.15A3.5 3.5 0 0 1 19 11.5c0 1.25-.66 2.35-1.65 2.96A3.5 3.5 0 0 1 14 19.5h-1.5V4h2z" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
-    <span>${escapeHtml(label)}</span>
-    <span class="thinking-meta">(${trace.length} ${escapeHtml(stepsWord)}${escapeHtml(durationLabel)})</span>
+    <span class="thinking-summary-label">${escapeHtml(label)}</span>
+    <span class="thinking-meta">${options.streaming ? '' : `(${trace.length} ${escapeHtml(stepsWord)}${escapeHtml(durationLabel)})`}</span>
     <svg class="thinking-summary-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
       <path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
@@ -679,10 +753,10 @@ function createThinkingElement(trace, durationMs) {
 
   const list = document.createElement('ol');
   list.className = 'thinking-steps';
-  for (const step of trace) {
-    const li = document.createElement('li');
-    li.textContent = step;
-    list.appendChild(li);
+  if (!options.streaming) {
+    for (const step of trace) {
+      appendThinkingStepItem(list, step);
+    }
   }
 
   details.append(summary, list);
@@ -767,6 +841,11 @@ function stopStreaming() {
     streamTimerId = null;
   }
   isGenerating = false;
+  if (pendingSleepResolve) {
+    const resolve = pendingSleepResolve;
+    pendingSleepResolve = null;
+    resolve();
+  }
   updateSendButton();
 }
 
@@ -963,7 +1042,9 @@ async function submitPrompt() {
   updateSendButton();
 
   const startedAt = Date.now();
-  const highThinking = Boolean(state.settings.highThinking);
+  const { cleanText, modeOverride } = parseThinkingDirective(text);
+  const highThinking =
+    modeOverride === 'think' ? true : modeOverride === 'fast' ? false : Boolean(state.settings.highThinking);
   const lang = state.settings.language;
   const canResearchOnline =
     state.settings.webResearch && (typeof navigator === 'undefined' || navigator.onLine !== false);
@@ -971,31 +1052,96 @@ async function submitPrompt() {
   let thinkingSteps = [];
   let fullReply = '';
 
+  if (highThinking && modeOverride === 'think') {
+    thinkingSteps.push('[Mode] Activated /think override (Qwen3-MML deep reasoning)');
+  }
+
+  const resolveSingleSubtask = async (subQuery) => {
+    const adv = solveAdvancedMathStepByStep(subQuery, lang);
+    if (adv) {
+      if (typeof adv.numericResult === 'number') chat.lastNumeric = adv.numericResult;
+      return { reply: adv.reply, steps: adv.steps };
+    }
+    const off = generateOfflineReply(subQuery, lang, state.memory, addMemoryItem, state.learnedKnowledge);
+    if (typeof off.numericResult === 'number') chat.lastNumeric = off.numericResult;
+    if (off.kind === 'utility' || off.kind === 'chitchat') {
+      return {
+        reply: off.reply,
+        steps: [
+          off.kind === 'chitchat'
+            ? `[Intent] Understood "${subQuery}" as human conversation`
+            : `[Tool] Solved "${subQuery}" via deterministic utility engine`,
+        ],
+      };
+    }
+    if (canResearchOnline && needsBrowserResearch(subQuery)) {
+      const res = await performBrowserResearch(subQuery, lang);
+      if (res.ok) {
+        if (res.results?.[0]?.title) recordTopic(chat, res.results[0].title);
+        if (state.settings.autoLearn) {
+          const entry = buildLearnedEntry(res);
+          if (entry) learnFromResearch(entry);
+        }
+        return {
+          reply: formatResearchMarkdown(subQuery, lang, res),
+          steps: [`[Tool] Researched "${subQuery}" via browser knowledge sources`],
+        };
+      }
+    }
+    return { reply: off.reply, steps: [`[Tool] Resolved "${subQuery}" via offline MML knowledge`] };
+  };
+
+  const cleanupAbortedAssistant = () => {
+    if (!assistantMsg.text) {
+      chat.messages = chat.messages.filter((m) => m.id !== assistantMsg.id);
+      rowEl.remove();
+      saveChats();
+    }
+  };
+
   // Step 1: Check conversation-dependent context handlers (name recall, history, summary, math chaining)
-  const contextDirect = resolveChatContextOffline(text, chat, lang);
+  const contextDirect = resolveChatContextOffline(cleanText, chat, lang);
   if (contextDirect) {
     fullReply = contextDirect.reply;
     if (highThinking) {
-      thinkingSteps.push('Checked active conversation memory and prompt history');
-      thinkingSteps.push('Resolved answer directly from current chat context');
+      thinkingSteps.push('[Context] Checked active conversation memory and prompt history');
+      thinkingSteps.push('[Solve] Resolved answer directly from current chat context');
     }
   } else {
     // Step 2: Check High-Thinking context transforms (simplify / bullet points / quiz) & advanced step-by-step math
-    const transformRes = highThinking ? transformPreviousReply(text, chat, lang) : null;
-    const advMathRes = !transformRes && highThinking ? solveAdvancedMathStepByStep(text, lang) : null;
+    const transformRes = highThinking ? transformPreviousReply(cleanText, chat, lang) : null;
+    const advMathRes = !transformRes && highThinking ? solveAdvancedMathStepByStep(cleanText, lang) : null;
+    const compoundParts = !transformRes && !advMathRes && highThinking ? decomposeCompoundQuery(cleanText) : null;
 
     if (transformRes) {
       fullReply = transformRes.reply;
-      thinkingSteps = [...transformRes.steps];
+      thinkingSteps.push(...transformRes.steps);
     } else if (advMathRes) {
       fullReply = advMathRes.reply;
       if (typeof advMathRes.numericResult === 'number') {
         chat.lastNumeric = advMathRes.numericResult;
       }
-      thinkingSteps = [...advMathRes.steps];
+      thinkingSteps.push(...advMathRes.steps);
+    } else if (compoundParts) {
+      const statusMsg = t().thinkingStatus || t().researching;
+      contentEl.innerHTML = `<p class="researching-status">${escapeHtml(statusMsg)}</p>`;
+      scrollToBottom();
+
+      thinkingSteps.push(`[Plan] Decomposed compound prompt into 2 sub-tasks`);
+      const [partOne, partTwo] = await Promise.all([
+        resolveSingleSubtask(compoundParts[0]),
+        resolveSingleSubtask(compoundParts[1]),
+      ]);
+      if (!isGenerating) {
+        cleanupAbortedAssistant();
+        return;
+      }
+      thinkingSteps.push(...partOne.steps, ...partTwo.steps);
+      thinkingSteps.push('[Synthesis] Merged both verified sub-task results into one response');
+      fullReply = `### 1. ${compoundParts[0]}\n${partOne.reply}\n\n---\n\n### 2. ${compoundParts[1]}\n${partTwo.reply}`;
     } else {
       // Step 3: Check dual-subject comparison query ("A vs B", "difference between A and B") when High Thinking is ON
-      const compPair = highThinking ? parseComparisonQuery(text) : null;
+      const compPair = highThinking ? parseComparisonQuery(cleanText) : null;
       if (compPair) {
         const statusMsg = t().thinkingStatus || t().researching;
         contentEl.innerHTML = `<p class="researching-status">${escapeHtml(statusMsg)}</p>`;
@@ -1005,19 +1151,15 @@ async function submitPrompt() {
           generateOfflineReply(q, lang, state.memory, addMemoryItem, state.learnedKnowledge)
         );
         if (!isGenerating) {
-          if (!assistantMsg.text) {
-            chat.messages = chat.messages.filter((m) => m.id !== assistantMsg.id);
-            rowEl.remove();
-            saveChats();
-          }
+          cleanupAbortedAssistant();
           return;
         }
         fullReply = compRes.reply;
         recordTopic(chat, compRes.topicLabel);
-        thinkingSteps = [...compRes.steps];
+        thinkingSteps.push(...compRes.steps);
       } else {
-        // Step 4: Offline MML trained knowledge, memory & utilities + Browser Research + MML synthesis
-        const offlineResult = generateOfflineReply(text, lang, state.memory, addMemoryItem, state.learnedKnowledge);
+        // Step 4: Structured Coder Templates + Offline MML + Browser Research + Qwen3 Deep Synthesis
+        const offlineResult = generateOfflineReply(cleanText, lang, state.memory, addMemoryItem, state.learnedKnowledge);
         if (offlineResult.switchLang) {
           state.settings.language = offlineResult.switchLang;
           saveSettings();
@@ -1029,145 +1171,175 @@ async function submitPrompt() {
           chat.lastNumeric = offlineResult.numericResult;
         }
 
-        const isFollowUp = Boolean(chat.lastTopic) && isFollowUpReference(text);
-        const explicitResearch = isExplicitResearchRequest(text);
-        const shouldUseResearch = canResearchOnline && offlineResult.kind !== 'utility';
+        const isHumanChat = offlineResult.kind === 'chitchat';
+        const isFollowUp = Boolean(chat.lastTopic) && !isHumanChat && isFollowUpReference(cleanText);
+        const explicitResearch = isExplicitResearchRequest(cleanText);
+        const researchNeeded = explicitResearch || isFollowUp || (!isHumanChat && needsBrowserResearch(cleanText));
+        const coderReply =
+          offlineResult.kind !== 'utility' && !isHumanChat ? generateStructuredCodeReply(cleanText, lang) : null;
 
-        fullReply = offlineResult.reply;
+        if (coderReply) {
+          fullReply = coderReply.reply;
+          recordTopic(chat, coderReply.topicLabel);
+          if (highThinking) thinkingSteps.push(...coderReply.steps);
+        } else {
+          const shouldUseResearch = canResearchOnline && offlineResult.kind !== 'utility' && researchNeeded;
 
-        if (shouldUseResearch) {
-          const statusMsg = highThinking ? t().thinkingStatus || t().researching : t().researching;
-          contentEl.innerHTML = `<p class="researching-status">${escapeHtml(statusMsg)}</p>`;
-          scrollToBottom();
+          fullReply = offlineResult.reply;
 
-          if (isFollowUp && chat.lastTopic && !explicitResearch) {
-            if (highThinking) {
-              thinkingSteps.push(`Linked follow-up prompt to active chat topic "${chat.lastTopic}"`);
-            }
-            const followRes = await researchFollowUpOnTopic(text, chat, state.settings.language);
-            if (!isGenerating) {
-              if (!assistantMsg.text) {
-                chat.messages = chat.messages.filter((m) => m.id !== assistantMsg.id);
-                rowEl.remove();
-                saveChats();
-              }
-              return;
-            }
-            if (followRes.ok && followRes.reply) {
-              fullReply = followRes.reply;
-              if (followRes.nextTopic) recordTopic(chat, followRes.nextTopic);
-              if (followRes.nextWikiLang) chat.lastWikiLang = followRes.nextWikiLang;
-              if (typeof followRes.nextOffset === 'number') chat.lastExtractOffset = followRes.nextOffset;
+          if (shouldUseResearch) {
+            const statusMsg = highThinking ? t().thinkingStatus || t().researching : t().researching;
+            contentEl.innerHTML = `<p class="researching-status">${escapeHtml(statusMsg)}</p>`;
+            scrollToBottom();
+
+            if (isFollowUp && chat.lastTopic && !explicitResearch) {
               if (highThinking) {
-                thinkingSteps.push(`Fetched next verified section on "${chat.lastTopic}"`);
+                thinkingSteps.push(`[Context] Linked follow-up prompt to active chat topic "${chat.lastTopic}"`);
               }
-              if (state.settings.autoLearn && followRes.learnedEntry) {
-                learnFromResearch(followRes.learnedEntry);
+              const followRes = await researchFollowUpOnTopic(cleanText, chat, state.settings.language);
+              if (!isGenerating) {
+                cleanupAbortedAssistant();
+                return;
+              }
+              if (followRes.ok && followRes.reply) {
+                fullReply = followRes.reply;
+                if (followRes.nextTopic) recordTopic(chat, followRes.nextTopic);
+                if (followRes.nextWikiLang) chat.lastWikiLang = followRes.nextWikiLang;
+                if (typeof followRes.nextOffset === 'number') chat.lastExtractOffset = followRes.nextOffset;
+                if (highThinking) {
+                  thinkingSteps.push(`[Tool] Fetched next verified section on "${chat.lastTopic}"`);
+                }
+                if (state.settings.autoLearn && followRes.learnedEntry) {
+                  learnFromResearch(followRes.learnedEntry);
+                }
+              } else {
+                const research = await performBrowserResearch(`${chat.lastTopic} ${cleanText}`, state.settings.language);
+                if (!isGenerating) {
+                  cleanupAbortedAssistant();
+                  return;
+                }
+                if (research.ok) {
+                  fullReply = formatResearchMarkdown(
+                    `${chat.lastTopic} — ${cleanText}`,
+                    state.settings.language,
+                    research
+                  );
+                  const resolvedTopic =
+                    research.codeSnippet?.title ||
+                    research.results?.[0]?.title ||
+                    research.dictionary?.word ||
+                    chat.lastTopic;
+                  recordTopic(chat, resolvedTopic);
+                  chat.lastWikiLang = research.wikiLang || chat.lastWikiLang || 'en';
+                  if (highThinking) {
+                    thinkingSteps.push(`[Tool] Researched combined topic "${chat.lastTopic} ${cleanText}" in browser`);
+                  }
+                  if (state.settings.autoLearn) {
+                    const entry = buildLearnedEntry(research);
+                    if (entry) learnFromResearch(entry);
+                  }
+                }
               }
             } else {
-              const research = await performBrowserResearch(`${chat.lastTopic} ${text}`, state.settings.language);
-              if (!isGenerating) return;
+              const research = await performBrowserResearch(cleanText, state.settings.language);
+              if (!isGenerating) {
+                cleanupAbortedAssistant();
+                return;
+              }
+
               if (research.ok) {
-                fullReply = formatResearchMarkdown(`${chat.lastTopic} — ${text}`, state.settings.language, research);
-                const resolvedTopic =
-                  research.codeSnippet?.title || research.results?.[0]?.title || research.dictionary?.word || chat.lastTopic;
-                recordTopic(chat, resolvedTopic);
-                chat.lastWikiLang = research.wikiLang || chat.lastWikiLang || 'en';
-                if (highThinking) {
-                  thinkingSteps.push(`Researched combined topic "${chat.lastTopic} ${text}" in browser`);
+                if (highThinking && !research.codeSnippet && research.results && research.results.length > 0) {
+                  const deepSynth = await enhanceResearchWithThinking(
+                    cleanText,
+                    state.settings.language,
+                    research,
+                    chat
+                  );
+                  if (!isGenerating) {
+                    cleanupAbortedAssistant();
+                    return;
+                  }
+                  if (deepSynth) {
+                    fullReply = deepSynth.markdown;
+                    thinkingSteps.push(...deepSynth.steps);
+                  } else {
+                    fullReply = formatResearchMarkdown(cleanText, state.settings.language, research);
+                  }
+                } else {
+                  fullReply = formatResearchMarkdown(cleanText, state.settings.language, research);
+                  if (highThinking) {
+                    if (research.codeSnippet) {
+                      thinkingSteps.push(`[Tool] Researched browser coding references for "${research.codeSnippet.title}"`);
+                    } else if (research.dictionary) {
+                      thinkingSteps.push(`[Tool] Queried lexical definition for "${research.dictionary.word}"`);
+                    } else if (research.results?.[0]) {
+                      thinkingSteps.push(`[Tool] Matched live browser knowledge for "${research.results[0].title}"`);
+                    }
+                  }
                 }
+
+                if (research.codeSnippet?.title) {
+                  recordTopic(chat, research.codeSnippet.title);
+                  chat.lastWikiLang = research.wikiLang || 'en';
+                  chat.lastExtractOffset = 1;
+                } else if (research.results && research.results[0]) {
+                  recordTopic(chat, research.results[0].title);
+                  chat.lastWikiLang = research.wikiLang || 'en';
+                  chat.lastExtractOffset = 1;
+                } else if (research.dictionary?.word) {
+                  recordTopic(chat, research.dictionary.word);
+                  chat.lastWikiLang = 'en';
+                  chat.lastExtractOffset = 1;
+                }
+
                 if (state.settings.autoLearn) {
                   const entry = buildLearnedEntry(research);
-                  if (entry) learnFromResearch(entry);
+                  if (entry) {
+                    learnFromResearch(entry);
+                    if (highThinking) {
+                      thinkingSteps.push(`[Memory] Saved "${entry.title}" into local offline knowledge`);
+                    }
+                  }
+                }
+              } else if (offlineResult.matched) {
+                fullReply = offlineResult.reply;
+                if (offlineResult.topicLabel) recordTopic(chat, offlineResult.topicLabel);
+                if (highThinking) {
+                  thinkingSteps.push('[Fallback] Browser research had no direct hit; scored offline MML model');
+                  if (offlineResult.topicLabel) {
+                    thinkingSteps.push(`[Knowledge] Matched trained module: "${offlineResult.topicLabel}"`);
+                  }
+                }
+              } else {
+                fullReply = formatResearchMarkdown(cleanText, state.settings.language, research);
+                if (highThinking) {
+                  thinkingSteps.push('[Search] No exact Wikipedia/offline match; generated verified web search links');
                 }
               }
             }
           } else {
-            const research = await performBrowserResearch(text, state.settings.language);
-            if (!isGenerating) {
-              if (!assistantMsg.text) {
-                chat.messages = chat.messages.filter((m) => m.id !== assistantMsg.id);
-                rowEl.remove();
-                saveChats();
-              }
-              return;
+            if (offlineResult.kind === 'topic' && offlineResult.topicLabel) {
+              recordTopic(chat, offlineResult.topicLabel);
             }
-
-            if (research.ok) {
-              if (highThinking && !research.codeSnippet && research.results && research.results.length > 0) {
-                const deepSynth = await enhanceResearchWithThinking(text, state.settings.language, research, chat);
-                if (!isGenerating) return;
-                if (deepSynth) {
-                  fullReply = deepSynth.markdown;
-                  thinkingSteps.push(...deepSynth.steps);
-                } else {
-                  fullReply = formatResearchMarkdown(text, state.settings.language, research);
-                }
+            if (!offlineResult.matched && !researchNeeded) {
+              fullReply = buildIntentClarificationReply(cleanText, lang);
+            }
+            if (highThinking) {
+              if (isHumanChat) {
+                thinkingSteps.push('[Intent] Recognized human conversational phrase — skipped unnecessary web search');
+                thinkingSteps.push('[Reply] Formulated natural conversational response directly');
+              } else if (offlineResult.kind === 'utility') {
+                thinkingSteps.push('[Tool] Solved deterministically via built-in math/utility engine');
+              } else if (!offlineResult.matched && !researchNeeded) {
+                thinkingSteps.push('[Intent] Carefully analyzed words — looks conversational or unclear rather than a factual query');
+                thinkingSteps.push('[Reply] Asked for clarification instead of running unneeded web research');
+              } else if (offlineResult.matched) {
+                thinkingSteps.push(
+                  `[Knowledge] Matched offline MML knowledge base${offlineResult.topicLabel ? ` (${offlineResult.topicLabel})` : ''}`
+                );
               } else {
-                fullReply = formatResearchMarkdown(text, state.settings.language, research);
-                if (highThinking) {
-                  if (research.codeSnippet) {
-                    thinkingSteps.push(`Researched browser coding references for "${research.codeSnippet.title}"`);
-                  } else if (research.dictionary) {
-                    thinkingSteps.push(`Queried lexical definition for "${research.dictionary.word}"`);
-                  } else if (research.results?.[0]) {
-                    thinkingSteps.push(`Matched live browser knowledge for "${research.results[0].title}"`);
-                  }
-                }
+                thinkingSteps.push('[Offline] Analyzed prompt locally; Browser Research is disabled or offline');
               }
-
-              if (research.codeSnippet?.title) {
-                recordTopic(chat, research.codeSnippet.title);
-                chat.lastWikiLang = research.wikiLang || 'en';
-                chat.lastExtractOffset = 1;
-              } else if (research.results && research.results[0]) {
-                recordTopic(chat, research.results[0].title);
-                chat.lastWikiLang = research.wikiLang || 'en';
-                chat.lastExtractOffset = 1;
-              } else if (research.dictionary?.word) {
-                recordTopic(chat, research.dictionary.word);
-                chat.lastWikiLang = 'en';
-                chat.lastExtractOffset = 1;
-              }
-
-              if (state.settings.autoLearn) {
-                const entry = buildLearnedEntry(research);
-                if (entry) {
-                  learnFromResearch(entry);
-                  if (highThinking) {
-                    thinkingSteps.push(`Saved "${entry.title}" into local offline memory`);
-                  }
-                }
-              }
-            } else if (offlineResult.matched) {
-              fullReply = offlineResult.reply;
-              if (offlineResult.topicLabel) recordTopic(chat, offlineResult.topicLabel);
-              if (highThinking) {
-                thinkingSteps.push('Browser research had no direct match; scored against trained offline MML model');
-                if (offlineResult.topicLabel) {
-                  thinkingSteps.push(`Matched trained offline module: "${offlineResult.topicLabel}"`);
-                }
-              }
-            } else {
-              fullReply = formatResearchMarkdown(text, state.settings.language, research);
-              if (highThinking) {
-                thinkingSteps.push('No exact Wikipedia/offline match found; generated verified web search links');
-              }
-            }
-          }
-        } else {
-          if (offlineResult.kind === 'topic' && offlineResult.topicLabel) {
-            recordTopic(chat, offlineResult.topicLabel);
-          }
-          if (highThinking) {
-            if (offlineResult.kind === 'utility') {
-              thinkingSteps.push('Solved deterministically via built-in math/utility engine');
-            } else if (offlineResult.matched) {
-              thinkingSteps.push(
-                `Matched offline MML knowledge base${offlineResult.topicLabel ? ` (${offlineResult.topicLabel})` : ''}`
-              );
-            } else {
-              thinkingSteps.push('Analyzed prompt offline; Browser Research is disabled or offline');
             }
           }
         }
@@ -1175,11 +1347,40 @@ async function submitPrompt() {
     }
   }
 
+  // Qwen3-style Live Streaming Thought Process before streaming final response
   if (highThinking && thinkingSteps.length > 0) {
     assistantMsg.thinkingTrace = thinkingSteps;
+    const liveThinkingEl = createThinkingElement(thinkingSteps, 0, { streaming: true });
+    rowEl.insertBefore(liveThinkingEl, contentEl);
+    contentEl.innerHTML = '';
+    const stepListEl = liveThinkingEl.querySelector('.thinking-steps');
+
+    for (const stepText of thinkingSteps) {
+      if (!isGenerating) {
+        cleanupAbortedAssistant();
+        return;
+      }
+      if (stepListEl) appendThinkingStepItem(stepListEl, stepText);
+      scrollToBottom();
+      await new Promise((resolve) => {
+        pendingSleepResolve = resolve;
+        streamTimerId = setTimeout(() => {
+          pendingSleepResolve = null;
+          streamTimerId = null;
+          resolve();
+        }, 65);
+      });
+    }
+
+    if (!isGenerating) {
+      cleanupAbortedAssistant();
+      return;
+    }
     assistantMsg.thinkingDurationMs = Date.now() - startedAt;
-    const thinkingNode = createThinkingElement(assistantMsg.thinkingTrace, assistantMsg.thinkingDurationMs);
-    rowEl.insertBefore(thinkingNode, contentEl);
+    const finalizedThinkingEl = createThinkingElement(assistantMsg.thinkingTrace, assistantMsg.thinkingDurationMs, {
+      streaming: false,
+    });
+    liveThinkingEl.replaceWith(finalizedThinkingEl);
   }
 
   if (isRtlText(fullReply)) contentEl.setAttribute('dir', 'rtl');
@@ -1742,6 +1943,12 @@ function bindEvents() {
     applyLocalization();
   });
 
+  els.modelModeSelect?.addEventListener('change', (e) => {
+    state.settings.highThinking = /** @type {HTMLSelectElement} */ (e.target).value === 'think';
+    saveSettings();
+    applyLocalization();
+  });
+
   els.thinkingToggleBtn?.addEventListener('click', () => {
     state.settings.highThinking = !state.settings.highThinking;
     saveSettings();
@@ -1798,12 +2005,12 @@ function bindEvents() {
 
   els.testVoiceBtn.addEventListener('click', () => {
     const samples = {
-      en: 'Hello! MyAI voice output is working smoothly.',
-      hi: 'नमस्ते! MyAI अब हिन्दी में बोलने के लिए तैयार है।',
-      hinglish: 'Namaste! MyAI ab Hindi aur English dono mein bol sakta hai.',
-      es: '¡Hola! La voz de MyAI funciona correctamente.',
-      fr: 'Bonjour ! La synthèse vocale de MyAI fonctionne bien.',
-      ar: 'مرحباً! الصوت في MyAI يعمل بشكل ممتاز.',
+      en: 'Hello! AirAI voice output is working smoothly.',
+      hi: 'नमस्ते! AirAI अब हिन्दी में बोलने के लिए तैयार है।',
+      hinglish: 'Namaste! AirAI ab Hindi aur English dono mein bol sakta hai.',
+      es: '¡Hola! La voz de AirAI funciona correctamente.',
+      fr: 'Bonjour ! La synthèse vocale de AirAI fonctionne bien.',
+      ar: 'مرحباً! الصوت في AirAI يعمل بشكل ممتاز.',
     };
     const sample = samples[state.settings.language] || samples.en;
     speakText(sample, 'test_voice');
