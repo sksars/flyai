@@ -1,0 +1,558 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>MyAI — Offline Multilingual Assistant</title>
+    <meta
+      name="description"
+      content="Offline-capable multilingual AI chatbot with voice input, text-to-speech, and local storage persistence."
+    />
+    <meta property="og:title" content="MyAI — Offline Multilingual Assistant" />
+    <meta
+      property="og:description"
+      content="Offline-capable multilingual AI chatbot with voice input, text-to-speech, and local storage persistence."
+    />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="theme-color" content="#0d9488" />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48' fill='none'%3E%3Crect x='4' y='4' width='40' height='40' rx='12' fill='%230d9488'/%3E%3Cpath d='M15 31V17L24 26L33 17V31' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='24' cy='14' r='2.2' fill='white'/%3E%3C/svg%3E"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./src/styles.css" />
+  </head>
+  <body>
+    <!-- ChatGPT-Style Splash / Flash Screen -->
+    <div id="splash-screen" class="splash-screen" role="status" aria-label="Loading MyAI">
+      <div class="splash-inner">
+        <div class="splash-logo" aria-hidden="true">
+          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="4" y="4" width="40" height="40" rx="12" stroke="currentColor" stroke-width="2.5" />
+            <path
+              d="M15 31V17L24 26L33 17V31"
+              stroke="currentColor"
+              stroke-width="2.75"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <circle cx="24" cy="14" r="2" fill="currentColor" />
+          </svg>
+        </div>
+        <h1 class="splash-title">MyAI</h1>
+        <p id="splash-subtitle" class="splash-subtitle">Offline Multilingual Assistant</p>
+        <div class="splash-progress-track" aria-hidden="true">
+          <div class="splash-progress-fill"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Application Shell -->
+    <div id="app-shell" class="app-shell app-shell--hidden">
+      <!-- Mobile Drawer Backdrop -->
+      <div id="sidebar-backdrop" class="sidebar-backdrop" aria-hidden="true"></div>
+
+      <!-- Collapsible Sidebar -->
+      <aside id="sidebar" class="sidebar" aria-label="Chat history and preferences">
+        <div class="sidebar-header">
+          <button id="brand-home-btn" class="brand-mark" type="button" title="MyAI">
+            <span class="brand-icon" aria-hidden="true">
+              <svg viewBox="0 0 32 32" fill="none">
+                <rect x="2" y="2" width="28" height="28" rx="8" stroke="currentColor" stroke-width="2.2" />
+                <path
+                  d="M10 21V11L16 17L22 11V21"
+                  stroke="currentColor"
+                  stroke-width="2.2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+            <span class="brand-name">MyAI</span>
+          </button>
+
+          <button id="close-sidebar-mobile-btn" class="icon-btn mobile-only" type="button" aria-label="Close sidebar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 6L6 18M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="sidebar-actions">
+          <button id="new-chat-btn" class="new-chat-btn" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M12 5v14M5 12h14" stroke-linecap="round" />
+            </svg>
+            <span id="label-new-chat">New Chat</span>
+          </button>
+
+          <div class="search-box">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="11" cy="11" r="7" />
+              <path d="M20 20l-3.5-3.5" stroke-linecap="round" />
+            </svg>
+            <input
+              id="chat-search-input"
+              type="search"
+              placeholder="Search chats..."
+              autocomplete="off"
+              aria-label="Search conversations"
+            />
+          </div>
+        </div>
+
+        <nav id="chat-history-list" class="chat-history-list" aria-label="Saved conversations"></nav>
+
+        <div class="sidebar-footer">
+          <button id="open-memory-btn" class="sidebar-footer-btn" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true">
+              <path d="M12 3a6 6 0 0 0-6 6c0 2.2 1.2 4.1 3 5.1V17h6v-2.9c1.8-1 3-2.9 3-5.1a6 6 0 0 0-6-6Z" />
+              <path d="M9.5 20h5" stroke-linecap="round" />
+            </svg>
+            <span id="label-memory-btn">Custom Memory</span>
+          </button>
+
+          <button id="open-settings-btn" class="sidebar-footer-btn" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true">
+              <circle cx="12" cy="12" r="3" />
+              <path
+                d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.26.6.84 1 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"
+              />
+            </svg>
+            <span id="label-settings-btn">Settings</span>
+          </button>
+
+          <nav class="sidebar-legal-links" aria-label="Legal and info pages">
+            <a href="./about.html">About</a>
+            <a href="./privacy-policy.html">Privacy</a>
+            <a href="./terms.html">Terms</a>
+            <a href="./contact.html">Contact</a>
+          </nav>
+        </div>
+      </aside>
+
+      <!-- Main Chat Area -->
+      <div class="chat-workspace">
+        <!-- Minimal Top Bar -->
+        <header class="topbar">
+          <div class="topbar-left">
+            <button
+              id="toggle-sidebar-btn"
+              class="icon-btn"
+              type="button"
+              aria-label="Toggle sidebar"
+              title="Toggle sidebar"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="16" rx="2" />
+                <path d="M9 4v16" />
+              </svg>
+            </button>
+            <span id="active-chat-title" class="topbar-title">New Chat</span>
+          </div>
+
+          <div class="topbar-right">
+            <label class="lang-select-wrap" aria-label="Select language">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true">
+                <circle cx="12" cy="12" r="9" />
+                <path d="M3.6 9h16.8M3.6 15h16.8M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18" />
+              </svg>
+              <select id="language-select" class="lang-select">
+                <option value="en">English</option>
+                <option value="hi">हिन्दी (Hindi)</option>
+                <option value="hinglish">Hinglish</option>
+                <option value="es">Español</option>
+                <option value="fr">Français</option>
+                <option value="ar">العربية</option>
+              </select>
+            </label>
+
+            <button
+              id="auto-tts-btn"
+              class="icon-btn"
+              type="button"
+              aria-pressed="false"
+              aria-label="Toggle auto read aloud"
+              title="Auto read aloud"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M11 5L6 9H2v6h4l5 4V5z" stroke-linejoin="round" />
+                <path id="tts-wave-1" d="M15.5 8.5a5 5 0 0 1 0 7" stroke-linecap="round" />
+                <path id="tts-wave-2" d="M18.5 5.5a9 9 0 0 1 0 13" stroke-linecap="round" />
+              </svg>
+            </button>
+
+            <button
+              id="theme-toggle-btn"
+              class="icon-btn"
+              type="button"
+              aria-label="Toggle dark or light theme"
+              title="Toggle theme"
+            >
+              <svg id="theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke-linejoin="round" />
+              </svg>
+              <svg
+                id="theme-icon-sun"
+                class="hidden"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <circle cx="12" cy="12" r="4" />
+                <path
+                  d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </button>
+          </div>
+        </header>
+
+        <!-- Scrollable Chat Messages / Empty Welcome View -->
+        <main id="chat-scroll-area" class="chat-scroll-area">
+          <!-- Welcome / Empty State -->
+          <section id="welcome-view" class="welcome-view" aria-label="Start a conversation">
+            <div class="welcome-emblem" aria-hidden="true">
+              <svg viewBox="0 0 48 48" fill="none">
+                <rect x="4" y="4" width="40" height="40" rx="12" stroke="currentColor" stroke-width="2.4" />
+                <path
+                  d="M15 31V17L24 26L33 17V31"
+                  stroke="currentColor"
+                  stroke-width="2.6"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </div>
+            <h2 id="welcome-heading" class="welcome-heading">How can I help you today?</h2>
+            <p id="welcome-subheading" class="welcome-subheading">
+              Ask questions, solve math, write code, or speak using your microphone — completely offline.
+            </p>
+            <div id="starter-grid" class="starter-grid"></div>
+
+            <!-- Publisher Guide, FAQ & Legal Navigation for Transparency & Crawlability -->
+            <section class="publisher-overview" aria-label="How MyAI Works and FAQ">
+              <div class="overview-grid">
+                <article class="overview-card">
+                  <h3>Offline Local Storage</h3>
+                  <p>
+                    Conversations, custom taught facts, and preferences stay saved privately inside your browser&apos;s
+                    local storage with zero external account required.
+                  </p>
+                </article>
+                <article class="overview-card">
+                  <h3>Source-Cited Browser Research</h3>
+                  <p>
+                    When online, Browser Research fetches verified encyclopedia and dictionary summaries, links original
+                    sources, and learns topics for future offline replies.
+                  </p>
+                </article>
+                <article class="overview-card">
+                  <h3>Multilingual Voice &amp; Speech</h3>
+                  <p>
+                    Speak or listen across English, हिन्दी (Hindi), Hinglish, Español, Français, and العربية using
+                    native Web Speech recognition and synthesis.
+                  </p>
+                </article>
+              </div>
+
+              <div class="faq-list">
+                <details class="faq-item">
+                  <summary>How does MyAI work without a backend server?</summary>
+                  <p>
+                    Built-in knowledge, math evaluation, unit conversions, and your Custom Memory run directly in
+                    JavaScript inside your browser. Chat history is stored locally on your device.
+                  </p>
+                </details>
+                <details class="faq-item">
+                  <summary>Where do Browser Research answers come from?</summary>
+                  <p>
+                    When Browser Research Mode is active and you are online, MyAI queries open Wikipedia and Free
+                    Dictionary endpoints directly from your browser and includes clickable source links.
+                  </p>
+                </details>
+                <details class="faq-item">
+                  <summary>How can I manage or delete my saved data?</summary>
+                  <p>
+                    Open Settings or Custom Memory from the sidebar to clear conversations, remove learned browser
+                    topics, or update your cookie and privacy preferences anytime.
+                  </p>
+                </details>
+              </div>
+
+              <nav class="welcome-legal-footer" aria-label="Policy and publisher links">
+                <a href="./about.html">About Us</a>
+                <a href="./privacy-policy.html">Privacy Policy</a>
+                <a href="./terms.html">Terms &amp; Disclaimer</a>
+                <a href="./contact.html">Contact</a>
+                <button id="open-consent-btn" class="legal-link-btn" type="button">Cookie Preferences</button>
+              </nav>
+            </section>
+          </section>
+
+          <!-- Message Thread -->
+          <div id="messages-container" class="messages-container hidden" role="log" aria-live="polite"></div>
+        </main>
+
+        <!-- Bottom Composer Area -->
+        <footer class="composer-shell">
+          <div id="voice-status-banner" class="voice-status-banner hidden" role="status">
+            <div class="voice-bars" aria-hidden="true">
+              <span></span><span></span><span></span><span></span>
+            </div>
+            <span id="voice-status-text">Listening...</span>
+            <button id="voice-stop-btn" class="voice-stop-btn" type="button">Stop</button>
+          </div>
+
+          <div id="toast-banner" class="toast-banner hidden" role="alert"></div>
+
+          <form id="chat-form" class="composer-box">
+            <button
+              id="thinking-toggle-btn"
+              class="composer-icon-btn"
+              type="button"
+              aria-pressed="true"
+              aria-label="Toggle High Thinking Model (MML)"
+              title="High Thinking MML"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path
+                  d="M9.5 4a3.5 3.5 0 0 0-3.5 3.5c0 .4.07.79.2 1.15A3.5 3.5 0 0 0 5 11.5c0 1.25.66 2.35 1.65 2.96A3.5 3.5 0 0 0 10 19.5h1.5V4h-2zM14.5 4a3.5 3.5 0 0 1 3.5 3.5c0 .4-.07.79-.2 1.15A3.5 3.5 0 0 1 19 11.5c0 1.25-.66 2.35-1.65 2.96A3.5 3.5 0 0 1 14 19.5h-1.5V4h2z"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </button>
+
+            <button
+              id="research-toggle-btn"
+              class="composer-icon-btn"
+              type="button"
+              aria-pressed="true"
+              aria-label="Toggle browser web research"
+              title="Browser Web Research"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="9" />
+                <path d="M3.6 9h16.8M3.6 15h16.8M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18" />
+              </svg>
+            </button>
+
+            <button
+              id="mic-btn"
+              class="composer-icon-btn"
+              type="button"
+              aria-label="Voice input"
+              title="Voice input"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="9" y="3" width="6" height="11" rx="3" />
+                <path d="M5 11a7 7 0 0 0 14 0M12 18v3M8 21h8" stroke-linecap="round" />
+              </svg>
+            </button>
+
+            <textarea
+              id="prompt-input"
+              class="prompt-input"
+              rows="1"
+              placeholder="Message MyAI..."
+              aria-label="Message MyAI"
+            ></textarea>
+
+            <button
+              id="send-btn"
+              class="send-btn"
+              type="submit"
+              aria-label="Send message"
+              title="Send message"
+              disabled
+            >
+              <svg id="send-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M12 19V5M5 12l7-7 7 7" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              <svg id="stop-gen-icon" class="hidden" viewBox="0 0 24 24" fill="currentColor">
+                <rect x="6" y="6" width="12" height="12" rx="2.5" />
+              </svg>
+            </button>
+          </form>
+
+          <p id="composer-footnote" class="composer-footnote">
+            MyAI runs offline in your browser · Chats saved in local storage
+          </p>
+        </footer>
+      </div>
+    </div>
+
+    <!-- Settings & Custom Memory Modal -->
+    <div id="modal-overlay" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h2 id="modal-title" class="modal-title">Settings</h2>
+          <button id="modal-close-btn" class="icon-btn" type="button" aria-label="Close modal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 6L6 18M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="modal-tabs" role="tablist">
+          <button id="tab-settings" class="modal-tab active" type="button" role="tab" aria-selected="true">
+            Preferences
+          </button>
+          <button id="tab-memory" class="modal-tab" type="button" role="tab" aria-selected="false">
+            Custom Memory
+          </button>
+        </div>
+
+        <!-- Settings Tab Panel -->
+        <div id="panel-settings" class="modal-body">
+          <div class="setting-row">
+            <div class="setting-info">
+              <label for="setting-language" id="label-setting-lang">Assistant Language</label>
+              <p id="desc-setting-lang">Controls UI text, replies, voice recognition, and speech voice.</p>
+            </div>
+            <select id="setting-language" class="setting-select">
+              <option value="en">English</option>
+              <option value="hi">हिन्दी (Hindi)</option>
+              <option value="hinglish">Hinglish</option>
+              <option value="es">Español</option>
+              <option value="fr">Français</option>
+              <option value="ar">العربية</option>
+            </select>
+          </div>
+
+          <div class="setting-row">
+            <div class="setting-info">
+              <label for="setting-high-thinking" id="label-setting-thinking">High Thinking Model (MML)</label>
+              <p id="desc-setting-thinking">Enable multi-step reasoning, step-by-step math, dual comparisons, and deep synthesis.</p>
+            </div>
+            <input id="setting-high-thinking" type="checkbox" class="toggle-switch" />
+          </div>
+
+          <div class="setting-row">
+            <div class="setting-info">
+              <label for="setting-web-research" id="label-setting-research">Browser Research Mode</label>
+              <p id="desc-setting-research">Fetch live web summaries when online for unknown topics or search queries.</p>
+            </div>
+            <input id="setting-web-research" type="checkbox" class="toggle-switch" />
+          </div>
+
+          <div class="setting-row">
+            <div class="setting-info">
+              <label for="setting-auto-learn" id="label-setting-autolearn">Learn from Browser Research</label>
+              <p id="desc-setting-autolearn">Automatically save researched facts into local storage for future offline chats.</p>
+            </div>
+            <input id="setting-auto-learn" type="checkbox" class="toggle-switch" />
+          </div>
+
+          <div class="setting-row">
+            <div class="setting-info">
+              <label for="setting-auto-tts" id="label-setting-autotts">Auto-Speak Replies</label>
+              <p id="desc-setting-autotts">Automatically read MyAI responses aloud after replying.</p>
+            </div>
+            <input id="setting-auto-tts" type="checkbox" class="toggle-switch" />
+          </div>
+
+          <div class="setting-row">
+            <div class="setting-info">
+              <label for="setting-voice-auto-send" id="label-setting-autosend">Auto-Send Voice Input</label>
+              <p id="desc-setting-autosend">Automatically submit your spoken question when recording ends.</p>
+            </div>
+            <input id="setting-voice-auto-send" type="checkbox" class="toggle-switch" />
+          </div>
+
+          <div class="setting-row">
+            <div class="setting-info">
+              <label for="setting-speech-rate" id="label-setting-rate">Speech Speed</label>
+              <p id="desc-setting-rate">Adjust text-to-speech playback speed.</p>
+            </div>
+            <div class="setting-controls-group">
+              <select id="setting-speech-rate" class="setting-select">
+                <option value="0.85">0.85× Slow</option>
+                <option value="1">1.0× Normal</option>
+                <option value="1.15">1.15× Brisk</option>
+                <option value="1.3">1.3× Fast</option>
+              </select>
+              <button id="test-voice-btn" class="setting-select" type="button">Test Voice</button>
+            </div>
+          </div>
+
+          <div class="setting-row setting-row--danger">
+            <div class="setting-info">
+              <span id="label-clear-chats" class="setting-label">Clear All Conversations</span>
+              <p id="desc-clear-chats">Delete every saved chat thread from local storage.</p>
+            </div>
+            <button id="clear-all-chats-btn" class="danger-btn" type="button">Clear All</button>
+          </div>
+        </div>
+
+        <!-- Custom Memory Tab Panel -->
+        <div id="panel-memory" class="modal-body hidden">
+          <p id="memory-intro" class="memory-intro">
+            Teach MyAI custom answers or facts offline. When you ask a matching question, MyAI will use your saved knowledge.
+          </p>
+
+          <form id="memory-form" class="memory-form">
+            <input
+              id="memory-question-input"
+              type="text"
+              placeholder="Question or keyword (e.g. my wifi password)"
+              required
+            />
+            <textarea
+              id="memory-answer-input"
+              rows="2"
+              placeholder="Answer MyAI should remember..."
+              required
+            ></textarea>
+            <button id="memory-save-btn" class="primary-btn" type="submit">Save to Offline Memory</button>
+          </form>
+
+          <div id="memory-list" class="memory-list"></div>
+
+          <div class="memory-section-header">
+            <h3 id="learned-heading" class="memory-section-title">Learned from Browser</h3>
+            <button id="clear-learned-btn" class="link-danger-btn" type="button">Clear</button>
+          </div>
+          <div id="learned-list" class="memory-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Non-Blocking Cookie & Privacy Consent Notice -->
+    <aside id="consent-banner" class="consent-banner hidden" role="dialog" aria-label="Privacy and cookie preferences">
+      <div class="consent-text">
+        <strong>Privacy &amp; Cookies Notice:</strong> MyAI stores chats and learned topics locally in your browser.
+        Third-party advertising partners (such as Google AdSense) may use cookies to serve relevant ads. See our
+        <a href="./privacy-policy.html">Privacy Policy</a>.
+      </div>
+      <div class="consent-actions">
+        <button id="consent-essential-btn" class="consent-btn-secondary" type="button">Essential Only</button>
+        <button id="consent-accept-btn" class="consent-btn-primary" type="button">Accept All</button>
+      </div>
+    </aside>
+
+    <noscript>
+      <div class="noscript-box">
+        <h2>MyAI — Offline Multilingual Assistant</h2>
+        <p>
+          Please enable JavaScript to use the interactive chat, voice input, and browser research features. Read our
+          <a href="./about.html">About</a>, <a href="./privacy-policy.html">Privacy Policy</a>,
+          <a href="./terms.html">Terms &amp; Disclaimer</a>, or <a href="./contact.html">Contact</a> pages.
+        </p>
+      </div>
+    </noscript>
+
+    <script type="module" src="./src/app.js"></script>
+  </body>
+</html>
+

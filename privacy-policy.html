@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Privacy Policy — MyAI</title>
+    <meta
+      name="description"
+      content="Privacy Policy for MyAI covering browser localStorage, voice processing, third-party APIs, cookies, and Google AdSense disclosures."
+    />
+    <meta name="theme-color" content="#0d9488" />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48' fill='none'%3E%3Crect x='4' y='4' width='40' height='40' rx='12' fill='%230d9488'/%3E%3Cpath d='M15 31V17L24 26L33 17V31' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='24' cy='14' r='2.2' fill='white'/%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="./src/styles.css" />
+  </head>
+  <body class="legal-body">
+    <header class="legal-header">
+      <div class="legal-header-inner">
+        <a class="legal-brand" href="./index.html">
+          <span class="brand-icon" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none">
+              <rect x="2" y="2" width="28" height="28" rx="8" stroke="currentColor" stroke-width="2.2" />
+              <path
+                d="M10 21V11L16 17L22 11V21"
+                stroke="currentColor"
+                stroke-width="2.2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </span>
+          <span>MyAI</span>
+        </a>
+        <nav class="legal-nav" aria-label="Site pages">
+          <a href="./index.html">Chat App</a>
+          <a href="./about.html">About</a>
+          <a href="./privacy-policy.html" aria-current="page">Privacy Policy</a>
+          <a href="./terms.html">Terms</a>
+          <a href="./contact.html">Contact</a>
+          <button id="legal-theme-btn" class="legal-theme-btn" type="button">Theme</button>
+        </nav>
+      </div>
+    </header>
+
+    <main class="legal-main">
+      <article class="legal-article">
+        <p class="legal-kicker">Last Updated: November 21, 2026</p>
+        <h1>Privacy Policy</h1>
+        <p class="legal-lead">
+          Your privacy is central to MyAI. Because MyAI operates as a client-side web application without a custom
+          application database, your chat history and custom memories remain in your own browser.
+        </p>
+
+        <h2>1. Information Stored Locally on Your Device</h2>
+        <p>
+          MyAI uses your browser&apos;s <code>localStorage</code> solely to persist your experience across sessions:
+        </p>
+        <ul>
+          <li><code>myai_chats_v1</code> — Your conversation threads on this device.</li>
+          <li><code>myai_settings_v1</code> — Language, theme, speech rate, voice, and research toggles.</li>
+          <li><code>myai_memory_v1</code> — Custom offline answers you explicitly teach MyAI.</li>
+          <li><code>myai_learned_v1</code> — Topic summaries learned during Browser Research when Auto-Learn is on.</li>
+          <li><code>myai_consent_v1</code> — Your cookie and privacy notice preference.</li>
+        </ul>
+        <p>
+          We do not upload, sell, or store your private chat logs on a central MyAI server. You can delete any or all
+          saved chats, custom memories, and learned topics at any time using the Settings &amp; Custom Memory modal or
+          your browser&apos;s site data controls.
+        </p>
+
+        <h2>2. Voice Input &amp; Speech Synthesis</h2>
+        <p>
+          Voice input uses your browser&apos;s native Web Speech API (<code>SpeechRecognition</code>) only when you click
+          the microphone button and grant browser permission. Audio processing is handled by your browser vendor&apos;s
+          speech service according to their privacy policy. Text-to-speech uses your device&apos;s built-in
+          <code>speechSynthesis</code> engine.
+        </p>
+
+        <h2>3. External Requests During Browser Research</h2>
+        <p>
+          When Browser Research Mode is enabled and you submit a query while online, your browser directly requests
+          factual summaries from public, CORS-enabled APIs (Wikipedia REST/Search API and Free Dictionary API). You may
+          disable Browser Research Mode anytime in Settings or via the globe toggle in the chat composer.
+        </p>
+
+        <h2>4. Google AdSense, Cookies &amp; Third-Party Advertising</h2>
+        <p>
+          This site may display advertisements served by Google AdSense and other third-party ad networks. In accordance
+          with Google AdSense policies:
+        </p>
+        <ul>
+          <li>
+            Third-party vendors, including Google, use cookies to serve ads based on a user&apos;s prior visits to this
+            website or other websites on the internet.
+          </li>
+          <li>
+            Google&apos;s use of advertising cookies enables it and its partners to serve ads to users based on their
+            visit to this site and/or other sites on the internet.
+          </li>
+          <li>
+            Users may opt out of personalized advertising by visiting
+            <a href="https://adssettings.google.com" target="_blank" rel="noopener noreferrer">Google Ads Settings</a>.
+          </li>
+          <li>
+            Users can also opt out of third-party vendor cookie usage for personalized advertising by visiting
+            <a href="https://www.aboutads.info/choices/" target="_blank" rel="noopener noreferrer">aboutads.info</a> and
+            reviewing
+            <a href="https://policies.google.com/technologies/ads" target="_blank" rel="noopener noreferrer"
+              >How Google uses information from sites or apps that use our services</a
+            >.
+          </li>
+        </ul>
+
+        <h2>5. Children&apos;s Privacy</h2>
+        <p>
+          MyAI is intended for general educational and productivity use and does not knowingly collect personal
+          information from children under the age of 13 (or the applicable minimum age in your jurisdiction).
+        </p>
+
+        <h2>6. Changes &amp; Contact</h2>
+        <p>
+          We may update this Privacy Policy periodically to reflect improvements or legal requirements. Questions or
+          privacy requests can be submitted via our <a href="./contact.html">Contact page</a>.
+        </p>
+      </article>
+    </main>
+
+    <footer class="legal-footer">
+      <div class="legal-footer-inner">
+        <span>&copy; 2026 MyAI Assistant</span>
+        <div class="legal-footer-links">
+          <a href="./about.html">About</a>
+          <a href="./privacy-policy.html">Privacy Policy</a>
+          <a href="./terms.html">Terms &amp; Disclaimer</a>
+          <a href="./contact.html">Contact</a>
+        </div>
+      </div>
+    </footer>
+
+    <script type="module" src="./src/legal.js"></script>
+  </body>
+</html>

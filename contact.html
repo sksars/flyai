@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Contact Us — MyAI</title>
+    <meta
+      name="description"
+      content="Contact the MyAI publisher for feedback, bug reports, privacy questions, or content inquiries."
+    />
+    <meta name="theme-color" content="#0d9488" />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48' fill='none'%3E%3Crect x='4' y='4' width='40' height='40' rx='12' fill='%230d9488'/%3E%3Cpath d='M15 31V17L24 26L33 17V31' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='24' cy='14' r='2.2' fill='white'/%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="./src/styles.css" />
+  </head>
+  <body class="legal-body">
+    <header class="legal-header">
+      <div class="legal-header-inner">
+        <a class="legal-brand" href="./index.html">
+          <span class="brand-icon" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none">
+              <rect x="2" y="2" width="28" height="28" rx="8" stroke="currentColor" stroke-width="2.2" />
+              <path
+                d="M10 21V11L16 17L22 11V21"
+                stroke="currentColor"
+                stroke-width="2.2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </span>
+          <span>MyAI</span>
+        </a>
+        <nav class="legal-nav" aria-label="Site pages">
+          <a href="./index.html">Chat App</a>
+          <a href="./about.html">About</a>
+          <a href="./privacy-policy.html">Privacy Policy</a>
+          <a href="./terms.html">Terms</a>
+          <a href="./contact.html" aria-current="page">Contact</a>
+          <button id="legal-theme-btn" class="legal-theme-btn" type="button">Theme</button>
+        </nav>
+      </div>
+    </header>
+
+    <main class="legal-main">
+      <article class="legal-article">
+        <p class="legal-kicker">Support &amp; Inquiries</p>
+        <h1>Contact Us</h1>
+        <p class="legal-lead">
+          Have feedback, a bug report, a privacy question, or a content takedown request? Reach out using the form
+          below or our direct publisher contact address.
+        </p>
+
+        <div class="contact-info-box">
+          <p><strong>Publisher Support Email:</strong> contact@myai-assistant.example</p>
+          <p><strong>Typical Response Time:</strong> 2&ndash;3 business days</p>
+        </div>
+
+        <form id="contact-form" class="contact-form">
+          <div class="contact-field">
+            <label for="contact-name">Your Name</label>
+            <input id="contact-name" type="text" placeholder="Enter your name" required />
+          </div>
+
+          <div class="contact-field">
+            <label for="contact-email">Your Email</label>
+            <input id="contact-email" type="email" placeholder="you@example.com" required />
+          </div>
+
+          <div class="contact-field">
+            <label for="contact-topic">Topic</label>
+            <select id="contact-topic">
+              <option value="General Feedback">General Feedback</option>
+              <option value="Bug Report">Bug Report</option>
+              <option value="Privacy & Data Request">Privacy &amp; Data Request</option>
+              <option value="Advertising / Policy Inquiry">Advertising / Policy Inquiry</option>
+            </select>
+          </div>
+
+          <div class="contact-field">
+            <label for="contact-message">Message</label>
+            <textarea id="contact-message" rows="4" placeholder="Write your message here..." required></textarea>
+          </div>
+
+          <button class="primary-btn" type="submit">Prepare Message</button>
+        </form>
+
+        <p id="contact-status" class="contact-status hidden" role="status"></p>
+        <p>
+          <a id="contact-mailto-link" class="primary-btn legal-cta-btn hidden" href="mailto:contact@myai-assistant.example"
+            >Open in Email App</a
+          >
+        </p>
+      </article>
+    </main>
+
+    <footer class="legal-footer">
+      <div class="legal-footer-inner">
+        <span>&copy; 2026 MyAI Assistant</span>
+        <div class="legal-footer-links">
+          <a href="./about.html">About</a>
+          <a href="./privacy-policy.html">Privacy Policy</a>
+          <a href="./terms.html">Terms &amp; Disclaimer</a>
+          <a href="./contact.html">Contact</a>
+        </div>
+      </div>
+    </footer>
+
+    <script type="module" src="./src/legal.js"></script>
+  </body>
+</html>

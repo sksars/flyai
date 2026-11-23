@@ -1,0 +1,6 @@
+{
+  "name": "MyAI",
+  "description": "Offline-capable multilingual AI chatbot with voice input, text-to-speech, and local storage persistence.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": []
+}

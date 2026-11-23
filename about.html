@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>About MyAI — Offline Multilingual Assistant</title>
+    <meta
+      name="description"
+      content="Learn how MyAI delivers privacy-first offline chat, multilingual voice input, Hindi text-to-speech, and source-cited browser research."
+    />
+    <meta name="theme-color" content="#0d9488" />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48' fill='none'%3E%3Crect x='4' y='4' width='40' height='40' rx='12' fill='%230d9488'/%3E%3Cpath d='M15 31V17L24 26L33 17V31' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='24' cy='14' r='2.2' fill='white'/%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="./src/styles.css" />
+  </head>
+  <body class="legal-body">
+    <header class="legal-header">
+      <div class="legal-header-inner">
+        <a class="legal-brand" href="./index.html">
+          <span class="brand-icon" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none">
+              <rect x="2" y="2" width="28" height="28" rx="8" stroke="currentColor" stroke-width="2.2" />
+              <path
+                d="M10 21V11L16 17L22 11V21"
+                stroke="currentColor"
+                stroke-width="2.2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </span>
+          <span>MyAI</span>
+        </a>
+        <nav class="legal-nav" aria-label="Site pages">
+          <a href="./index.html">Chat App</a>
+          <a href="./about.html" aria-current="page">About</a>
+          <a href="./privacy-policy.html">Privacy Policy</a>
+          <a href="./terms.html">Terms</a>
+          <a href="./contact.html">Contact</a>
+          <button id="legal-theme-btn" class="legal-theme-btn" type="button">Theme</button>
+        </nav>
+      </div>
+    </header>
+
+    <main class="legal-main">
+      <article class="legal-article">
+        <p class="legal-kicker">About This Application</p>
+        <h1>About MyAI — Privacy-First Offline & Browser Research Assistant</h1>
+        <p class="legal-lead">
+          MyAI is a free, lightweight, serverless web assistant designed to help students, developers, and everyday users
+          solve math, write code, learn new topics, and interact by voice across multiple languages directly inside
+          their browser.
+        </p>
+
+        <h2>Why MyAI Exists</h2>
+        <p>
+          Many modern AI tools require paid accounts, constant server round-trips, or heavy data tracking. MyAI takes a
+          local-first approach: core capabilities—such as offline knowledge guides, custom user-taught memory, unit
+          conversions, and arithmetic—run locally inside your browser without requiring any backend server.
+        </p>
+
+        <h2>Core Capabilities</h2>
+        <ul>
+          <li>
+            <strong>Offline Local Storage Architecture:</strong> Conversations, preferences, custom notes, and learned
+            summaries are persisted exclusively in your browser&apos;s <code>localStorage</code>.
+          </li>
+          <li>
+            <strong>Context-Aware Browser Research:</strong> When online with Browser Research Mode enabled, MyAI can
+            look up live, source-cited factual summaries from open knowledge APIs (Wikipedia and Free Dictionary API)
+            and understand follow-up questions within the active conversation.
+          </li>
+          <li>
+            <strong>Auto-Learn for Future Offline Use:</strong> Verified research summaries can be saved locally so MyAI
+            remembers how to answer those topics even when your internet connection is offline.
+          </li>
+          <li>
+            <strong>Multilingual Interface & Voice Accessibility:</strong> Supports English, हिन्दी (Hindi), Hinglish,
+            Español, Français, and العربية with Web Speech voice recognition and text-to-speech playback.
+          </li>
+        </ul>
+
+        <h2>Open Content & Attribution</h2>
+        <p>
+          Live encyclopedia summaries retrieved through Browser Research originate from Wikipedia contributors and are
+          linked directly to their source articles under the Creative Commons Attribution-ShareAlike (CC BY-SA) license.
+          Word definitions are retrieved from Free Dictionary API. MyAI always displays source links alongside
+          researched answers for verification and transparency.
+        </p>
+
+        <div class="legal-cta-row">
+          <a class="primary-btn legal-cta-btn" href="./index.html">Open MyAI Chat</a>
+          <a class="legal-secondary-btn" href="./contact.html">Contact Publisher</a>
+        </div>
+      </article>
+    </main>
+
+    <footer class="legal-footer">
+      <div class="legal-footer-inner">
+        <span>&copy; 2026 MyAI Assistant</span>
+        <div class="legal-footer-links">
+          <a href="./about.html">About</a>
+          <a href="./privacy-policy.html">Privacy Policy</a>
+          <a href="./terms.html">Terms &amp; Disclaimer</a>
+          <a href="./contact.html">Contact</a>
+        </div>
+      </div>
+    </footer>
+
+    <script type="module" src="./src/legal.js"></script>
+  </body>
+</html>
